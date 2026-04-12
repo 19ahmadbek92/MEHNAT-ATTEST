@@ -17,13 +17,14 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 # Papkalarga ruxsat berish
 RUN chown -R application:application /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Saytni ishga tushirishdan oldin avtomatik bazani yangilash scripti
+# Ishlab chiqarish: migratsiya + kesh (xavfsiz va tez ishga tushish)
 RUN echo '#!/bin/bash\n\
-php artisan config:clear\n\
-php artisan route:clear\n\
-php artisan view:clear\n\
+set -e\n\
 php artisan migrate --force\n\
-/entrypoint supervisor' > /start.sh \
+php artisan config:cache\n\
+php artisan route:cache\n\
+php artisan view:cache\n\
+exec /entrypoint supervisor' > /start.sh \
     && chmod +x /start.sh
 
 CMD ["/start.sh"]
