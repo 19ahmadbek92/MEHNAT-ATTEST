@@ -386,6 +386,9 @@
                 <a href="{{ route('laboratory.protocols.index') }}" class="nav-item {{ request()->routeIs('laboratory.protocols.*') ? 'active' : '' }}">
                     <span class="nav-icon">📋</span> O'lchov protokollari
                 </a>
+                <a href="{{ route('laboratory.workplaces.index') }}" class="nav-item {{ request()->routeIs('laboratory.workplaces.*', 'laboratory.measurements.*') ? 'active' : '' }}">
+                    <span class="nav-icon">📐</span> Ish o‘rinlari o‘lchovi
+                </a>
             @endif
 
             @if(Auth::user()->role === 'commission')
@@ -394,6 +397,15 @@
                     <span class="nav-icon">🔍</span> Tekshirish
                     @php $pendingCount = \App\Models\AttestationApplication::where('status', 'hr_approved')->count(); @endphp
                     @if($pendingCount > 0)<span class="nav-badge">{{ $pendingCount }}</span>@endif
+                </a>
+            @endif
+
+            @if(Auth::user()->role === 'hr')
+                <div class="nav-label">HR</div>
+                <a href="{{ route('hr.applications.index') }}" class="nav-item {{ request()->routeIs('hr.applications.*') ? 'active' : '' }}">
+                    <span class="nav-icon">📋</span> Arizalarni ko‘rib chiqish
+                    @php $hrNew = \App\Models\AttestationApplication::where('status', 'submitted')->count(); @endphp
+                    @if($hrNew > 0)<span class="nav-badge">{{ $hrNew }}</span>@endif
                 </a>
             @endif
 
@@ -434,6 +446,7 @@
                             @case('expert') Vazirlik Ekspеrti @break
                             @case('institute_expert') Institut Ekspеrti @break
                             @case('laboratory') Laboratoriya @break
+                            @case('hr') HR @break
                             @default {{ Auth::user()->role }}
                         @endswitch
                     </div>

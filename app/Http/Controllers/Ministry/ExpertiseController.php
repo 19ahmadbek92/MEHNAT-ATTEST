@@ -17,11 +17,13 @@ class ExpertiseController extends Controller
             ->where('is_auto_approved', false)
             ->orderBy('submitted_at')
             ->get()
-            ->each(fn($app) => $app->autoApproveIfOverdue()); // §33 tekshiruv
+            ->each(fn ($app) => $app->autoApproveIfOverdue()); // 33-band tekshiruv
 
         $history = StateExpertiseApplication::with(['organization', 'ministryExpert'])
-            ->whereIn('ministry_status', ['approved', 'returned'])
-            ->orWhere('is_auto_approved', true)
+            ->where(function ($query) {
+                $query->whereIn('ministry_status', ['approved', 'returned'])
+                    ->orWhere('is_auto_approved', true);
+            })
             ->latest()
             ->get();
 

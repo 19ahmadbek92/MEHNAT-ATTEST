@@ -1,8 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\EriController;
 use App\Http\Controllers\Auth\OneIDController;
+use App\Http\Controllers\Auth\SelectTypeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AttestationCampaignController;
@@ -12,9 +15,7 @@ use App\Http\Controllers\Commission\EvaluationController;
 use App\Http\Controllers\HR\ApplicationReviewController;
 use App\Http\Controllers\Employee\AiProcessController;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', HomeController::class)->name('home');
 
 Route::get('lang/{lang}', [\App\Http\Controllers\LanguageController::class, 'switchLang'])->name('lang.switch');
 
@@ -60,9 +61,7 @@ require __DIR__.'/auth.php';
 */
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     // Admin routes
     Route::middleware(['role:admin'])->group(function () {
@@ -167,9 +166,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Kirish turini tanlash sahifasi
-Route::get('/login/select-type', function () {
-    return view('auth.select-type');
-})->name('auth.select-type');
+Route::get('/login/select-type', SelectTypeController::class)->name('auth.select-type');
 
 Route::middleware(['demo.sso'])->group(function () {
     Route::get('/auth/oneid', [OneIDController::class, 'redirect'])
