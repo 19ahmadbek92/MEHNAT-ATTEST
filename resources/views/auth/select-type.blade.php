@@ -309,36 +309,42 @@
                     <span class="eyebrow-text">Xavfsiz kirish</span>
                 </div>
 
+                @php($demoSso = app()->isLocal() || config('demo.sso'))
+
                 <div class="card-title">Kabinetga kiring</div>
                 <div class="card-subtitle">Kirish turini tanlang</div>
 
-                <div class="login-options">
-                    <!-- OneID -->
-                    <a href="{{ route('auth.oneid.redirect') }}" class="login-option primary">
-                        <div class="option-icon teal">👤</div>
-                        <div class="option-body">
-                            <div class="option-title">Jismoniy shaxs</div>
-                            <div class="option-sub">OneID orqali kirish</div>
-                        </div>
-                        <div class="option-arrow">→</div>
-                    </a>
+                @if($demoSso)
+                    <div class="login-options">
+                        <a href="{{ route('auth.oneid.redirect') }}" class="login-option primary">
+                            <div class="option-icon teal">👤</div>
+                            <div class="option-body">
+                                <div class="option-title">Jismoniy shaxs</div>
+                                <div class="option-sub">OneID (demo) orqali kirish</div>
+                            </div>
+                            <div class="option-arrow">→</div>
+                        </a>
 
-                    <!-- ERI -->
-                    <a href="{{ route('auth.eri.login') }}" class="login-option">
-                        <div class="option-icon gold">🏢</div>
-                        <div class="option-body">
-                            <div class="option-title">Yuridik shaxs</div>
-                            <div class="option-sub">ERI (E-imzo) orqali kirish</div>
-                        </div>
-                        <div class="option-arrow">→</div>
-                    </a>
-                </div>
+                        <a href="{{ route('auth.eri.login') }}" class="login-option">
+                            <div class="option-icon gold">🏢</div>
+                            <div class="option-body">
+                                <div class="option-title">Yuridik shaxs</div>
+                                <div class="option-sub">ERI (demo) orqali kirish</div>
+                            </div>
+                            <div class="option-arrow">→</div>
+                        </a>
+                    </div>
 
-                <div class="divider-row">
-                    <div class="divider-line"></div>
-                    <span class="divider-text">yoki ishlab chiqish uchun</span>
-                    <div class="divider-line"></div>
-                </div>
+                    <div class="divider-row">
+                        <div class="divider-line"></div>
+                        <span class="divider-text">yoki</span>
+                        <div class="divider-line"></div>
+                    </div>
+                @else
+                    <p style="font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; margin-bottom: 20px;">
+                        OneID va ERI integratsiyasi hozircha o‘chirilgan. Tizimga faqat ruxsat etilgan login va parol bilan kiring.
+                    </p>
+                @endif
 
                 <div style="margin-top: 16px;">
                     <a href="{{ route('login.email') }}" class="login-option" style="justify-content: center; gap: 10px; padding: 14px 20px;">

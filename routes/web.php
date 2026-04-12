@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\EriController;
+use App\Http\Controllers\Auth\OneIDController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AttestationCampaignController;
@@ -14,26 +16,35 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// TEST UCHUN VAQTINCHALIK
-Route::get('/run-migrations-auto', function() {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        return 'Migrated successfully! <a href="/auto-login-admin">Go to Dashboard</a>';
-    } catch (\Exception $e) {
-        return $e->getMessage();
-    }
-});
-
-Route::get('/auto-login-admin', function() {
-    $user = \App\Models\User::whereIn('role', ['admin', 'employer'])->first();
-    if ($user) {
-        \Illuminate\Support\Facades\Auth::login($user);
-        return redirect()->route('dashboard');
-    }
-    return 'Test User not found.';
-});
-
 Route::get('lang/{lang}', [\App\Http\Controllers\LanguageController::class, 'switchLang'])->name('lang.switch');
+
+/*
+|--------------------------------------------------------------------------
+| Faqat local muhit: migratsiya va avto-login (internetda ISHLATMASLIK kerak)
+|--------------------------------------------------------------------------
+*/
+if (app()->environment('local')) {
+    Route::get('/run-migrations-auto', function () {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+
+            return 'Migrated successfully! <a href="/auto-login-admin">Go to Dashboard</a>';
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    });
+
+    Route::get('/auto-login-admin', function () {
+        $user = \App\Models\User::whereIn('role', ['admin', 'employer'])->first();
+        if ($user) {
+            \Illuminate\Support\Facades\Auth::login($user);
+
+            return redirect()->route('dashboard');
+        }
+
+        return 'Test User not found.';
+    });
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -124,6 +135,20 @@ Route::middleware(['auth'])->group(function () {
             ->name('commission.evaluations.store');
     });
 
+    // HR (arizalarni ko'rib chiqish, tasdiqlash)
+    Route::middleware(['role:hr'])->group(function () {
+        Route::get('hr/applications', [ApplicationReviewController::class, 'index'])
+            ->name('hr.applications.index');
+        Route::get('hr/applications/{application}', [ApplicationReviewController::class, 'show'])
+            ->name('hr.applications.show');
+        Route::post('hr/applications/{application}/approve', [ApplicationReviewController::class, 'approve'])
+            ->name('hr.applications.approve');
+        Route::post('hr/applications/{application}/reject', [ApplicationReviewController::class, 'reject'])
+            ->name('hr.applications.reject');
+        Route::post('hr/applications/{application}/finalize', [ApplicationReviewController::class, 'finalize'])
+            ->name('hr.applications.finalize');
+    });
+
     // Institute Expert routes (Dastlabki baholash)
     Route::middleware(['role:institute_expert'])->group(function () {
         Route::get('institute/expertise', [\App\Http\Controllers\Institute\ExpertiseController::class, 'index'])->name('institute.expertise.index');
@@ -140,19 +165,19 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])
         ->name('profile.destroy');
 });
-use App\Http\Controllers\Auth\OneIDController;
-use App\Http\Controllers\Auth\EriController;
 
 // Kirish turini tanlash sahifasi
 Route::get('/login/select-type', function () {
     return view('auth.select-type');
 })->name('auth.select-type');
 
-Route::get('/auth/oneid', [OneIDController::class, 'redirect'])
-    ->name('auth.oneid.redirect');
+Route::middleware(['demo.sso'])->group(function () {
+    Route::get('/auth/oneid', [OneIDController::class, 'redirect'])
+        ->name('auth.oneid.redirect');
 
-Route::get('/auth/oneid/callback', [OneIDController::class, 'callback'])
-    ->name('auth.oneid.callback');
+    Route::get('/auth/oneid/callback', [OneIDController::class, 'callback'])
+        ->name('auth.oneid.callback');
 
-Route::get('/auth/eri', [EriController::class, 'login'])
-    ->name('auth.eri.login');
+    Route::get('/auth/eri', [EriController::class, 'login'])
+        ->name('auth.eri.login');
+});

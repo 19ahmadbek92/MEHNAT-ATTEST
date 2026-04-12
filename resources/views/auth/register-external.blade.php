@@ -7,17 +7,26 @@
             </p>
         </div>
 
-        <div class="space-y-3">
-            <a href="{{ route('auth.oneid.redirect') }}"
-               class="w-full block text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
-                OneID orqali ro'yhatdan o'tish
-            </a>
+        @php($demoSso = app()->isLocal() || config('demo.sso'))
 
-            <a href="{{ route('auth.eri.login') }}"
-               class="w-full block text-center bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
-                ERI (E-IMZO) orqali ro'yhatdan o'tish
-            </a>
-        </div>
+        @if($demoSso)
+            <div class="space-y-3">
+                <a href="{{ route('auth.oneid.redirect') }}"
+                   class="w-full block text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+                    OneID (demo) orqali ro'yhatdan o'tish
+                </a>
+
+                <a href="{{ route('auth.eri.login') }}"
+                   class="w-full block text-center bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
+                    ERI (demo) orqali ro'yhatdan o'tish
+                </a>
+            </div>
+        @else
+            <p class="text-sm text-gray-600 text-center">
+                OneID / ERI demo rejimi productionda o‘chirilgan. Ro‘yxatdan o‘tish uchun tizim administratoriga murojaat qiling yoki
+                <a class="text-blue-600 underline" href="{{ route('login.email') }}">email orqali kirish</a>.
+            </p>
+        @endif
 
         <div class="text-center">
             <a class="underline text-xs text-gray-600 hover:text-gray-900" href="{{ route('login') }}">

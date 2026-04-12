@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
+    /**
+     * Faqat mahalliy sinov / birinchi o‘rnatish uchun.
+     * Internetdagi serverda parollarni o‘zgartiring yoki seedni o‘chirib tashlang.
+     */
     public function run(): void
     {
         // ──────────────────────────────────────────────
@@ -113,7 +117,19 @@ class DatabaseSeeder extends Seeder
         );
 
         // ──────────────────────────────────────────────
-        //  7. OPEN ATTESTATION CAMPAIGN
+        //  7. HR (arizalarni ko'rib chiqish)
+        // ──────────────────────────────────────────────
+        User::updateOrCreate(
+            ['email' => 'hr@attestatsiya.uz'],
+            [
+                'name'     => 'HR Mutaxassisi (Demo)',
+                'password' => Hash::make('Hr@2024!'),
+                'role'     => 'hr',
+            ]
+        );
+
+        // ──────────────────────────────────────────────
+        //  8. OPEN ATTESTATION CAMPAIGN
         // ──────────────────────────────────────────────
         AttestationCampaign::updateOrCreate(
             ['title' => '2024-yil Ish o\'rinlari Attestatsiyasi'],
@@ -134,6 +150,7 @@ class DatabaseSeeder extends Seeder
                 ['Laboratoriya',    'lab@attestatsiya.uz',      'Lab@2024!'],
                 ['Institut Ekspеrti','institut@attestatsiya.uz','Institut@2024!'],
                 ['Vazirlik Ekspеrti','vazirlik@attestatsiya.uz','Vazirlik@2024!'],
+                ['HR',              'hr@attestatsiya.uz',       'Hr@2024!'],
             ]
         );
     }

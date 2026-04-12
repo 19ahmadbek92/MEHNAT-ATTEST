@@ -35,8 +35,14 @@
                         </x-nav-link>
                     @endif
 
-                    @if(Auth::user()->role === 'expert')
+                    @if(Auth::user()->role === 'hr')
                         <x-nav-link :href="route('hr.applications.index')" :active="request()->routeIs('hr.applications.*')">
+                            HR ko‘rib chiqish
+                        </x-nav-link>
+                    @endif
+
+                    @if(Auth::user()->role === 'expert')
+                        <x-nav-link :href="route('ministry.expertise.index')" :active="request()->routeIs('ministry.expertise.*')">
                             Davlat ekspertizasi
                         </x-nav-link>
                     @endif
@@ -151,8 +157,14 @@
                     </x-responsive-nav-link>
                 @endif
 
-                @if(Auth::user()->role === 'expert')
+                @if(Auth::user()->role === 'hr')
                     <x-responsive-nav-link :href="route('hr.applications.index')" :active="request()->routeIs('hr.applications.*')">
+                        HR ko‘rib chiqish
+                    </x-responsive-nav-link>
+                @endif
+
+                @if(Auth::user()->role === 'expert')
+                    <x-responsive-nav-link :href="route('ministry.expertise.index')" :active="request()->routeIs('ministry.expertise.*')">
                         Davlat ekspertizasi
                     </x-responsive-nav-link>
                 @endif

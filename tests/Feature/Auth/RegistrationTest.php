@@ -16,7 +16,7 @@ class RegistrationTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_new_users_can_register(): void
+    public function test_email_password_registration_is_not_available(): void
     {
         $response = $this->post('/register', [
             'name' => 'Test User',
@@ -25,7 +25,7 @@ class RegistrationTest extends TestCase
             'password_confirmation' => 'password',
         ]);
 
-        $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $this->assertGuest();
+        $response->assertStatus(405);
     }
 }

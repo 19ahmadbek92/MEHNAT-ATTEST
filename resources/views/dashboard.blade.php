@@ -1,8 +1,8 @@
 <x-app-layout>
     <x-slot name="header">Boshqaruv paneli</x-slot>
 
-    {{-- Statistika - faqat admin va expert uchun --}}
-    @if(in_array(auth()->user()->role, ['admin', 'expert']))
+    {{-- Statistika - admin, davlat eksperti va HR uchun --}}
+    @if(in_array(auth()->user()->role, ['admin', 'expert', 'hr'], true))
         @php
             $totalApps    = \App\Models\AttestationApplication::count();
             $pendingApps  = \App\Models\AttestationApplication::where('status', 'submitted')->count();
@@ -57,6 +57,7 @@
                                 @case('employer') Ish beruvchi @break
                                 @case('commission') Komissiya a'zosi @break
                                 @case('expert') Davlat Ekspеrti @break
+                                @case('hr') HR (ekspertiza) @break
                                 @case('institute_expert') Institut Ekspеrti @break
                                 @case('laboratory') Laboratoriya (Tashkilot) @break
                                 @default {{ auth()->user()->role }}
@@ -83,7 +84,7 @@
         $chartData = [];
         $chartColors = [];
 
-        if (in_array(auth()->user()->role, ['admin', 'expert'])) {
+        if (in_array(auth()->user()->role, ['admin', 'expert'], true)) {
             $chartLabels = ['Kutayotgan', 'Ko\'rib chiqilmoqda', 'Yakunlangan (Tasdiqlangan)', 'Rad etilgan'];
             $chartData = [
                 \App\Models\StateExpertiseApplication::where('ministry_status', 'pending')->count(),
@@ -92,6 +93,15 @@
                 0 // example placeholder
             ];
             $chartColors = ['#f59e0b', '#3b82f6', '#10b981', '#ef4444'];
+        } elseif (auth()->user()->role === 'hr') {
+            $chartLabels = ['Yangi', 'HR tasdiqlangan', 'Rad etilgan', 'Yakunlangan'];
+            $chartData = [
+                \App\Models\AttestationApplication::where('status', 'submitted')->count(),
+                \App\Models\AttestationApplication::where('status', 'hr_approved')->count(),
+                \App\Models\AttestationApplication::where('status', 'hr_rejected')->count(),
+                \App\Models\AttestationApplication::where('status', 'finalized')->count(),
+            ];
+            $chartColors = ['#f59e0b', '#3b82f6', '#ef4444', '#10b981'];
         } elseif (auth()->user()->role === 'employer') {
             $orgId = auth()->user()->organization_id;
             $chartLabels = ['Kutayotgan joylar', 'Jarayonda', 'Attestatsiyalangan'];
@@ -206,6 +216,17 @@
                     <div class="action-card-icon icon-gold">🔍</div>
                     <div class="action-card-title">Tekshirish</div>
                     <div class="action-card-desc">Ish o'rinlarini joyida tekshirish va o'lchov natijalarini kiritish.</div>
+                    <div class="action-card-arrow">→</div>
+                </div>
+            </a>
+        @endif
+
+        @if(auth()->user()->role === 'hr')
+            <a href="{{ route('hr.applications.index') }}" class="action-card">
+                <div class="action-card-body">
+                    <div class="action-card-icon icon-blue">📋</div>
+                    <div class="action-card-title">Arizalarni ko‘rib chiqish</div>
+                    <div class="action-card-desc">Yangi arizalarni tasdiqlash yoki rad etish, yakuniy sinf belgilash.</div>
                     <div class="action-card-arrow">→</div>
                 </div>
             </a>
