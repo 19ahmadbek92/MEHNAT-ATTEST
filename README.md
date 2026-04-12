@@ -1,60 +1,63 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# E-Attestatsiya
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel asosidagi ish o‘rinlari mehnat sharoitlari attestatsiyasi jarayonini boshqarish tizimi: kampaniyalar, arizalar, komissiya baholashi, HR ko‘rib chiqishi, davlat ekspertizasi va hisobotlar.
 
-## About Laravel
+## Talablar
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP **8.2+**
+- [Composer](https://getcomposer.org/)
+- Node.js **20+** va npm (frontend uchun)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## O‘rnatish (mahalliy)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+touch database/database.sqlite   # yoki .env da MySQL/PostgreSQL
+php artisan migrate
+php artisan db:seed
+npm install
+npm run build
+php artisan serve
+```
 
-## Learning Laravel
+Brauzerda `http://127.0.0.1:8000` oching. Seeder foydalanuvchilari va parollari `DatabaseSeeder` ichida; **productionda** ularni o‘zgartiring yoki seedni ishlatmang.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Muhim muhit o‘zgaruvchilari
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| O‘zgaruvchi | Tavsif |
+|-------------|--------|
+| `APP_ENV` | Productionda `production`. |
+| `APP_DEBUG` | Productionda `false`. |
+| `APP_URL` | To‘liq URL, masalan `https://attest.example.uz`. |
+| `APP_KEY` | `php artisan key:generate` — bo‘sh qoldirilmasin. |
+| `APP_DEMO_SSO` | `true` faqat staging/demo: OneID/ERI sinov kirish. Productionda `false`. |
+| `TRUSTED_PROXIES` | Reverse proxy orqasida HTTPS uchun: `*` yoki IP ro‘yxati (vergul bilan). Ishonchsiz ochiq tarmoqda `*` ishlatmang. |
+| `DB_*` | Productionda SQLite o‘rniga MySQL/PostgreSQL tavsiya etiladi. |
 
-## Laravel Sponsors
+Batafsil izohlar: `.env.example`.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Docker
 
-### Premium Partners
+```bash
+docker build -t e-attestatsiya .
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Ishga tushirishda konteynerga `.env` (yoki muhit o‘zgaruvchilari) bering; image ichida `.env` bo‘lmasligi kerak.
 
-## Contributing
+## OneID va ERI
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Hozircha **demo** rejim: `APP_ENV=local` yoki `APP_DEMO_SSO=true` bo‘lganda yoqiladi. Haqiqiy OneID / E-IMZO integratsiyasi alohida ishlab chiqiladi.
 
-## Code of Conduct
+## Testlar
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan test
+```
 
-## Security Vulnerabilities
+GitHub Actions: `.github/workflows/tests.yml`.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Litsenziya
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-"# MEHNAT-ATTEST"  
+Laravel asosiy skeleti [MIT](https://opensource.org/licenses/MIT) litsenziyasi ostida. Loyiha modifikatsiyalari ham shu asosda tarqatilishi mumkin (kerak bo‘lsa, litsenziyani aniq belgilang).

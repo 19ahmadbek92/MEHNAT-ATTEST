@@ -5,6 +5,9 @@ WORKDIR /var/www/html
 
 COPY . /var/www/html/
 
+# Tasodifiy .env ni imagedan chiqarish (productionda muhit o'zgaruvchilari bilan beriladi)
+RUN rm -f /var/www/html/.env
+
 # PHP kutubxonalarini o'rnatish
 RUN composer install --no-dev --optimize-autoloader
 
