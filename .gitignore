@@ -2,6 +2,8 @@
 *.cache
 .DS_Store
 .env
+composer.phar
+yuklash.bat
 .env.backup
 .env.production
 .phpactor.json
