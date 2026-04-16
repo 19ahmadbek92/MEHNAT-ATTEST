@@ -27,7 +27,7 @@ php artisan migrate --force\n\
 php artisan config:cache\n\
 php artisan route:cache\n\
 php artisan view:cache\n\
-exec /entrypoint supervisor' > /start.sh \
+exec supervisord' > /start.sh \
     && chmod +x /start.sh
 
 CMD ["/start.sh"]
