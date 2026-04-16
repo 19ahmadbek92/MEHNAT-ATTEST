@@ -9,7 +9,7 @@ COPY . /var/www/html/
 RUN rm -f /var/www/html/.env
 
 # PHP kutubxonalarini o'rnatish
-RUN composer install --no-dev --optimize-autoloader
+RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --prefer-dist --no-interaction
 
 # Node.js va npm ni o'rnatish
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \

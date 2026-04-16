@@ -31,6 +31,11 @@ class ApplicationController extends Controller
 
     public function create()
     {
+        if (!auth()->user()->organization_id) {
+            return redirect()->route('employer.organization.index')
+                ->with('error', 'Iltimos, avvalo korxona ma\'lumotlarini kiriting.');
+        }
+
         $openCampaigns = AttestationCampaign::where('status', 'open')->get();
         return view('employee.applications.create', compact('openCampaigns'));
     }
