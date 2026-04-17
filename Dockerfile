@@ -1,33 +1,34 @@
 FROM webdevops/php-nginx:8.2
 
 ENV WEB_DOCUMENT_ROOT=/var/www/html/public
+ENV PHP_DISMOD=ioncube
 WORKDIR /var/www/html
 
+# Loyiha fayllarini nusxalash
 COPY . /var/www/html/
 
-# Tasodifiy .env ni imagedan chiqarish (productionda muhit o'zgaruvchilari bilan beriladi)
+# .env ni o'chirish (productionda muhit o'zgaruvchilari bilan beriladi)
 RUN rm -f /var/www/html/.env
 
 # PHP kutubxonalarini o'rnatish
 RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --prefer-dist --no-interaction
 
-# Node.js va npm ni o'rnatish
+# Node.js va npm ni o'rnatish, frontendni build qilish
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
-    && npm install \
-    && npm run build
+    && npm ci --no-audit \
+    && npm run build \
+    && rm -rf node_modules
 
-# Papkalarga ruxsat berish
-RUN chown -R application:application /var/www/html/storage /var/www/html/bootstrap/cache
+# Storage va cache papkalariga ruxsat berish
+RUN mkdir -p /var/www/html/storage/logs \
+    && mkdir -p /var/www/html/storage/framework/{sessions,views,cache} \
+    && mkdir -p /var/www/html/bootstrap/cache \
+    && chown -R application:application /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Ishlab chiqarish: migratsiya + kesh (xavfsiz va tez ishga tushish)
-RUN echo '#!/bin/bash\n\
-set -e\n\
-php artisan migrate --force\n\
-php artisan config:cache\n\
-php artisan route:cache\n\
-php artisan view:cache\n\
-exec supervisord' > /start.sh \
-    && chmod +x /start.sh
+# Runtime role script
+COPY docker/entrypoint.sh /usr/local/bin/app-entrypoint
+RUN chmod +x /usr/local/bin/app-entrypoint
 
-CMD ["/start.sh"]
+CMD ["/usr/local/bin/app-entrypoint"]

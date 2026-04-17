@@ -46,6 +46,19 @@ docker build -t e-attestatsiya .
 
 Ishga tushirishda konteynerga `.env` (yoki muhit o‘zgaruvchilari) bering; image ichida `.env` bo‘lmasligi kerak.
 
+`docker-compose.yml` ishlab chiqarish oqimi uchun 3 process modelini beradi:
+- `app` (HTTP)
+- `worker` (queue)
+- `scheduler` (schedule)
+
+```bash
+docker compose up -d --build
+```
+
+Health endpointlar:
+- `GET /up` (Laravel built-in)
+- `GET /healthz` (DB + cache check)
+
 ## OneID va ERI
 
 Hozircha **demo** rejim: `APP_ENV=local` yoki `APP_DEMO_SSO=true` bo‘lganda yoqiladi. Haqiqiy OneID / E-IMZO integratsiyasi alohida ishlab chiqiladi.
@@ -57,6 +70,12 @@ php artisan test
 ```
 
 GitHub Actions: `.github/workflows/tests.yml`.
+
+## Operatsion hujjatlar
+
+- Backup va rollback yo'riqnomasi: `docs/operations/backup-rollback.md`
+- Secrets boshqaruvi: `docs/operations/secrets-management.md`
+- Release gate va sign-off: `docs/operations/release-gate.md`
 
 ## Litsenziya
 

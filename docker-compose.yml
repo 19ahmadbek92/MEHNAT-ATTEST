@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: e-attestatsiya:latest
+    ports:
+      - "8080:80"
+    env_file:
+      - .env
+    environment:
+      APP_PROCESS_ROLE: app
+      RUN_MIGRATIONS: "true"
+    depends_on:
+      - db
+      - redis
+
+  worker:
+    image: e-attestatsiya:latest
+    env_file:
+      - .env
+    environment:
+      APP_PROCESS_ROLE: worker
+      RUN_MIGRATIONS: "false"
+    depends_on:
+      - app
+      - redis
+      - db
+
+  scheduler:
+    image: e-attestatsiya:latest
+    env_file:
+      - .env
+    environment:
+      APP_PROCESS_ROLE: scheduler
+      RUN_MIGRATIONS: "false"
+    depends_on:
+      - app
+      - redis
+      - db
+
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-attestation}
+      MYSQL_USER: ${DB_USERNAME:-attest}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-attest}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+
+volumes:
+  db_data:
