@@ -15,6 +15,12 @@ class AttestationCampaignController extends Controller
         return view('admin.campaigns.index', compact('campaigns'));
     }
 
+    public function show(AttestationCampaign $campaign)
+    {
+        $campaign->load('applications');
+        return view('admin.campaigns.show', compact('campaign'));
+    }
+
     public function create()
     {
         return view('admin.campaigns.create');

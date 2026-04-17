@@ -24,8 +24,32 @@
                     @endif
 
                     @if(Auth::user()->role === 'employer')
+                        <x-nav-link :href="route('employer.organization.index')" :active="request()->routeIs('employer.organization.*')">
+                            Korxona
+                        </x-nav-link>
+                        <x-nav-link :href="route('employer.workplaces.index')" :active="request()->routeIs('employer.workplaces.*')">
+                            Ish o'rinlari
+                        </x-nav-link>
+                        <x-nav-link :href="route('employer.tenders.index')" :active="request()->routeIs('employer.tenders.*')">
+                            Tender
+                        </x-nav-link>
                         <x-nav-link :href="route('employee.applications.index')" :active="request()->routeIs('employee.applications.*')">
-                            Ish o'rinlari arizalarim
+                            Arizalar
+                        </x-nav-link>
+                        <x-nav-link :href="route('employer.expertise.index')" :active="request()->routeIs('employer.expertise.*')">
+                            Ekspertiza
+                        </x-nav-link>
+                    @endif
+
+                    @if(Auth::user()->role === 'laboratory')
+                        <x-nav-link :href="route('laboratory.profile.index')" :active="request()->routeIs('laboratory.profile.*')">
+                            Profil
+                        </x-nav-link>
+                        <x-nav-link :href="route('laboratory.protocols.index')" :active="request()->routeIs('laboratory.protocols.*')">
+                            Protokollar
+                        </x-nav-link>
+                        <x-nav-link :href="route('laboratory.workplaces.index')" :active="request()->routeIs('laboratory.workplaces.*')">
+                            O'lchov
                         </x-nav-link>
                     @endif
 
@@ -37,7 +61,13 @@
 
                     @if(Auth::user()->role === 'hr')
                         <x-nav-link :href="route('hr.applications.index')" :active="request()->routeIs('hr.applications.*')">
-                            HR ko‘rib chiqish
+                            HR ko'rib chiqish
+                        </x-nav-link>
+                    @endif
+
+                    @if(Auth::user()->role === 'institute_expert')
+                        <x-nav-link :href="route('institute.expertise.index')" :active="request()->routeIs('institute.expertise.*')">
+                            Institut baholash
                         </x-nav-link>
                     @endif
 
@@ -123,6 +153,75 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 Boshqaruv paneli
             </x-responsive-nav-link>
+
+            @if(Auth::user()->role === 'admin')
+                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                    Admin
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.campaigns.index')" :active="request()->routeIs('admin.campaigns.*')">
+                    Kampaniyalar
+                </x-responsive-nav-link>
+            @endif
+
+            @if(Auth::user()->role === 'employer')
+                <x-responsive-nav-link :href="route('employer.organization.index')" :active="request()->routeIs('employer.organization.*')">
+                    Korxona
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('employer.workplaces.index')" :active="request()->routeIs('employer.workplaces.*')">
+                    Ish o'rinlari
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('employer.tenders.index')" :active="request()->routeIs('employer.tenders.*')">
+                    Tender
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('employee.applications.index')" :active="request()->routeIs('employee.applications.*')">
+                    Arizalar
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('employer.expertise.index')" :active="request()->routeIs('employer.expertise.*')">
+                    Ekspertiza
+                </x-responsive-nav-link>
+            @endif
+
+            @if(Auth::user()->role === 'laboratory')
+                <x-responsive-nav-link :href="route('laboratory.profile.index')" :active="request()->routeIs('laboratory.profile.*')">
+                    Profil
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('laboratory.protocols.index')" :active="request()->routeIs('laboratory.protocols.*')">
+                    Protokollar
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('laboratory.workplaces.index')" :active="request()->routeIs('laboratory.workplaces.*')">
+                    O'lchov
+                </x-responsive-nav-link>
+            @endif
+
+            @if(Auth::user()->role === 'commission')
+                <x-responsive-nav-link :href="route('commission.evaluations.index')" :active="request()->routeIs('commission.evaluations.*')">
+                    Tekshirish
+                </x-responsive-nav-link>
+            @endif
+
+            @if(Auth::user()->role === 'hr')
+                <x-responsive-nav-link :href="route('hr.applications.index')" :active="request()->routeIs('hr.applications.*')">
+                    HR ko'rib chiqish
+                </x-responsive-nav-link>
+            @endif
+
+            @if(Auth::user()->role === 'institute_expert')
+                <x-responsive-nav-link :href="route('institute.expertise.index')" :active="request()->routeIs('institute.expertise.*')">
+                    Institut baholash
+                </x-responsive-nav-link>
+            @endif
+
+            @if(Auth::user()->role === 'expert')
+                <x-responsive-nav-link :href="route('ministry.expertise.index')" :active="request()->routeIs('ministry.expertise.*')">
+                    Davlat ekspertizasi
+                </x-responsive-nav-link>
+            @endif
+
+            @if(in_array(Auth::user()->role, ['admin','expert'], true))
+                <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
+                    Hisobotlar
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <div class="pt-4 pb-1 border-t border-gray-200">
@@ -132,49 +231,6 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                    Boshqaruv paneli
-                </x-responsive-nav-link>
-
-                @if(Auth::user()->role === 'admin')
-                    <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
-                        Admin
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('admin.campaigns.index')" :active="request()->routeIs('admin.campaigns.*')">
-                        Kampaniyalar
-                    </x-responsive-nav-link>
-                @endif
-
-                @if(Auth::user()->role === 'employer')
-                    <x-responsive-nav-link :href="route('employee.applications.index')" :active="request()->routeIs('employee.applications.*')">
-                        Ish o'rinlari arizalarim
-                    </x-responsive-nav-link>
-                @endif
-
-                @if(Auth::user()->role === 'commission')
-                    <x-responsive-nav-link :href="route('commission.evaluations.index')" :active="request()->routeIs('commission.evaluations.*')">
-                        Tekshirish
-                    </x-responsive-nav-link>
-                @endif
-
-                @if(Auth::user()->role === 'hr')
-                    <x-responsive-nav-link :href="route('hr.applications.index')" :active="request()->routeIs('hr.applications.*')">
-                        HR ko‘rib chiqish
-                    </x-responsive-nav-link>
-                @endif
-
-                @if(Auth::user()->role === 'expert')
-                    <x-responsive-nav-link :href="route('ministry.expertise.index')" :active="request()->routeIs('ministry.expertise.*')">
-                        Davlat ekspertizasi
-                    </x-responsive-nav-link>
-                @endif
-
-                @if(in_array(Auth::user()->role, ['admin','expert'], true))
-                    <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
-                        Hisobotlar
-                    </x-responsive-nav-link>
-                @endif
-
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
