@@ -24,7 +24,9 @@ class PlatformSmokeTest extends TestCase
             ->assertHeader('X-Content-Type-Options', 'nosniff');
 
         $this->get(route('auth.select-type'))->assertOk();
-        $this->get(route('healthz'))->assertOk()->assertJsonStructure(['status', 'checks']);
+        $this->get(route('healthz'))
+            ->assertOk()
+            ->assertJsonStructure(['status', 'checks' => ['database', 'cache', 'storage']]);
     }
 
     public function test_critical_named_routes_are_registered(): void
