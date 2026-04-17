@@ -15,7 +15,7 @@ Artisan::command('release:gate', function () {
     Artisan::call('optimize:clear');
 
     $checks = [
-        'test' => ['cmd' => 'test', 'args' => ['--env' => 'testing']],
+        'test' => ['cmd' => 'test', 'args' => []],
         'migrate:status' => ['cmd' => 'migrate:status', 'args' => []],
         'migrate:dry-run' => ['cmd' => 'migrate', 'args' => ['--pretend' => true]],
         'config:cache' => ['cmd' => 'config:cache', 'args' => []],
