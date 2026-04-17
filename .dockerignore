@@ -10,3 +10,12 @@ vendor
 public/hot
 public/build
 .phpunit.result.cache
+tests
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+*.md
+docker-compose*.yml
+yuklash.bat
+composer.phar

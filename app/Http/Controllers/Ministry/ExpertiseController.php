@@ -4,10 +4,15 @@ namespace App\Http\Controllers\Ministry;
 
 use App\Http\Controllers\Controller;
 use App\Models\StateExpertiseApplication;
+use App\Services\AuditLogger;
 use Illuminate\Http\Request;
 
 class ExpertiseController extends Controller
 {
+    public function __construct(private readonly AuditLogger $auditLogger)
+    {
+    }
+
     public function index()
     {
         // Faqat Institut ma'qullagan arizalar ko'rinadi (Tartibnoma 28-band)
@@ -69,6 +74,11 @@ class ExpertiseController extends Controller
                 'conclusion_blank_no'  => $blankNo,
             ]);
 
+            $this->auditLogger->log($request, 'ministry.expertise.approved', $expertise, [
+                'conclusion_number' => $conclusionNo,
+                'blank_number' => $blankNo,
+            ]);
+
             // Fake (Mock) API integratsiya chaqirig'i
             $apiService = new \App\Services\MockIntegrationService();
             $apiService->sendConclusionToStateServices([
@@ -93,6 +103,11 @@ class ExpertiseController extends Controller
                 'ministry_return_legal_ref'=> $validated['return_legal_ref'],
                 'ministry_return_deadline' => $returnDeadline->toDateString(),
                 'ministry_reviewed_at'     => now(),
+            ]);
+
+            $this->auditLogger->log($request, 'ministry.expertise.returned', $expertise, [
+                'return_deadline' => $returnDeadline->toDateString(),
+                'return_legal_ref' => $validated['return_legal_ref'],
             ]);
 
             return redirect()->route('ministry.expertise.index')

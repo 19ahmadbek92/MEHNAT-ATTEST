@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HealthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\EriController;
 use App\Http\Controllers\Auth\OneIDController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\HR\ApplicationReviewController;
 use App\Http\Controllers\Employee\AiProcessController;
 
 Route::get('/', HomeController::class)->name('home');
+Route::get('/healthz', HealthController::class)->name('healthz');
 
 Route::get('lang/{lang}', [\App\Http\Controllers\LanguageController::class, 'switchLang'])->name('lang.switch');
 
@@ -168,7 +170,7 @@ Route::middleware(['auth'])->group(function () {
 // Kirish turini tanlash sahifasi
 Route::get('/login/select-type', SelectTypeController::class)->name('auth.select-type');
 
-Route::middleware(['demo.sso'])->group(function () {
+Route::middleware(['guest', 'throttle:demo-auth', 'demo.sso'])->group(function () {
     Route::get('/auth/oneid', [OneIDController::class, 'redirect'])
         ->name('auth.oneid.redirect');
 

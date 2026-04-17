@@ -4,17 +4,27 @@ namespace App\Http\Controllers\HR;
 
 use App\Http\Controllers\Controller;
 use App\Models\AttestationApplication;
+use App\Services\AuditLogger;
 use Illuminate\Http\Request;
 
 class ApplicationReviewController extends Controller
 {
+    public function __construct(private readonly AuditLogger $auditLogger)
+    {
+    }
+
     public function index(Request $request)
     {
         $status = $request->query('status', 'submitted');
 
-        $allowed = ['submitted', 'hr_approved', 'hr_rejected', 'finalized'];
+        $allowed = [
+            AttestationApplication::STATUS_SUBMITTED,
+            AttestationApplication::STATUS_HR_APPROVED,
+            AttestationApplication::STATUS_HR_REJECTED,
+            AttestationApplication::STATUS_FINALIZED,
+        ];
         if (!in_array($status, $allowed, true)) {
-            $status = 'submitted';
+            $status = AttestationApplication::STATUS_SUBMITTED;
         }
 
         $applications = AttestationApplication::with(['user', 'campaign'])
@@ -35,7 +45,7 @@ class ApplicationReviewController extends Controller
 
     public function approve(Request $request, AttestationApplication $application)
     {
-        if ($application->status !== 'submitted') {
+        if (! $application->canTransitionTo(AttestationApplication::STATUS_HR_APPROVED)) {
             return back()->with('status', 'Bu ariza allaqachon ko\'rib chiqilgan.');
         }
 
@@ -43,20 +53,23 @@ class ApplicationReviewController extends Controller
             'hr_comment' => ['nullable', 'string'],
         ]);
 
-        $application->update([
-            'status' => 'hr_approved',
+        $application->transitionTo(AttestationApplication::STATUS_HR_APPROVED, [
             'hr_reviewed_by' => $request->user()->id,
             'hr_reviewed_at' => now(),
             'hr_comment' => $data['hr_comment'] ?? null,
         ]);
 
-        return redirect()->route('hr.applications.index', ['status' => 'submitted'])
+        $this->auditLogger->log($request, 'hr.application.approved', $application, [
+            'status' => $application->status,
+        ]);
+
+        return redirect()->route('hr.applications.index', ['status' => AttestationApplication::STATUS_SUBMITTED])
             ->with('status', 'Ariza tasdiqlandi (Ekspertiza).');
     }
 
     public function reject(Request $request, AttestationApplication $application)
     {
-        if ($application->status !== 'submitted') {
+        if (! $application->canTransitionTo(AttestationApplication::STATUS_HR_REJECTED)) {
             return back()->with('status', 'Bu ariza allaqachon ko\'rib chiqilgan.');
         }
 
@@ -64,21 +77,25 @@ class ApplicationReviewController extends Controller
             'hr_comment' => ['required', 'string'],
         ]);
 
-        $application->update([
-            'status' => 'hr_rejected',
+        $application->transitionTo(AttestationApplication::STATUS_HR_REJECTED, [
             'hr_reviewed_by' => $request->user()->id,
             'hr_reviewed_at' => now(),
             'hr_comment' => $data['hr_comment'],
             'final_decision' => 'fail',
         ]);
 
-        return redirect()->route('hr.applications.index', ['status' => 'submitted'])
+        $this->auditLogger->log($request, 'hr.application.rejected', $application, [
+            'status' => $application->status,
+            'comment' => $data['hr_comment'],
+        ]);
+
+        return redirect()->route('hr.applications.index', ['status' => AttestationApplication::STATUS_SUBMITTED])
             ->with('status', 'Ariza rad etildi (Ekspertiza).');
     }
 
     public function finalize(Request $request, AttestationApplication $application)
     {
-        if (!in_array($application->status, ['hr_approved', 'finalized'], true)) {
+        if (! $application->canTransitionTo(AttestationApplication::STATUS_FINALIZED)) {
             abort(403, 'Yakunlash uchun ruxsat yo\'q.');
         }
 
@@ -86,12 +103,15 @@ class ApplicationReviewController extends Controller
             'workplace_class' => ['required', 'in:optimal,ruxsat_etilgan,zararli_xavfli'],
         ]);
 
-        $application->update([
-            'status' => 'finalized',
+        $application->transitionTo(AttestationApplication::STATUS_FINALIZED, [
             'workplace_class' => $data['workplace_class'],
             'final_decision' => $data['workplace_class'],
             'finalized_by' => $request->user()->id,
             'finalized_at' => now(),
+        ]);
+
+        $this->auditLogger->log($request, 'hr.application.finalized', $application, [
+            'workplace_class' => $data['workplace_class'],
         ]);
 
         return redirect()->route('hr.applications.show', $application)

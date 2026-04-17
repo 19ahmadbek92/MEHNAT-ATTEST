@@ -5,14 +5,19 @@ namespace App\Http\Controllers\Commission;
 use App\Http\Controllers\Controller;
 use App\Models\AttestationApplication;
 use App\Models\AttestationEvaluation;
+use App\Services\AuditLogger;
 use Illuminate\Http\Request;
 
 class EvaluationController extends Controller
 {
+    public function __construct(private readonly AuditLogger $auditLogger)
+    {
+    }
+
     public function index()
     {
         $applications = AttestationApplication::with(['user', 'campaign'])
-            ->where('status', 'hr_approved')
+            ->where('status', AttestationApplication::STATUS_HR_APPROVED)
             ->latest()
             ->paginate(10);
 
@@ -21,7 +26,7 @@ class EvaluationController extends Controller
 
     public function evaluateForm(AttestationApplication $application)
     {
-        if ($application->status !== 'hr_approved') {
+        if ($application->status !== AttestationApplication::STATUS_HR_APPROVED) {
             abort(403, 'Ushbu ish o\'rni tekshirish uchun ruxsat etilmagan.');
         }
 
@@ -32,7 +37,7 @@ class EvaluationController extends Controller
 
     public function storeOrUpdate(Request $request, AttestationApplication $application)
     {
-        if ($application->status !== 'hr_approved') {
+        if ($application->status !== AttestationApplication::STATUS_HR_APPROVED) {
             abort(403, 'Ushbu ish o\'rni tekshirish uchun ruxsat etilmagan.');
         }
 
@@ -58,6 +63,11 @@ class EvaluationController extends Controller
         );
 
         $application->recalculateFinalScore();
+
+        $this->auditLogger->log($request, 'commission.evaluation.saved', $application, [
+            'score' => $data['score'],
+            'evaluator_id' => $request->user()->id,
+        ]);
 
         return redirect()->route('commission.evaluations.index')
             ->with('status', 'Tekshiruv natijalari saqlandi.');
