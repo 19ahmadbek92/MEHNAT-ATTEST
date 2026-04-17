@@ -35,4 +35,18 @@ return [
         ],
     ],
 
+    // Real integratsiya uchun kerakli parametrlar (OneID / E-IMZO)
+    'oneid' => [
+        'client_id' => env('ONEID_CLIENT_ID'),
+        'client_secret' => env('ONEID_CLIENT_SECRET'),
+        'redirect_uri' => env('ONEID_REDIRECT_URI'),
+        'base_url' => env('ONEID_BASE_URL'),
+    ],
+
+    'eri' => [
+        'base_url' => env('ERI_BASE_URL'),
+        'client_id' => env('ERI_CLIENT_ID'),
+        'client_secret' => env('ERI_CLIENT_SECRET'),
+    ],
+
 ];

@@ -9,6 +9,18 @@ class AttestationApplication extends Model
 {
     use HasFactory;
 
+    public const STATUS_SUBMITTED = 'submitted';
+    public const STATUS_HR_APPROVED = 'hr_approved';
+    public const STATUS_HR_REJECTED = 'hr_rejected';
+    public const STATUS_FINALIZED = 'finalized';
+
+    public const ALLOWED_TRANSITIONS = [
+        self::STATUS_SUBMITTED => [self::STATUS_HR_APPROVED, self::STATUS_HR_REJECTED],
+        self::STATUS_HR_APPROVED => [self::STATUS_FINALIZED],
+        self::STATUS_HR_REJECTED => [],
+        self::STATUS_FINALIZED => [],
+    ];
+
     protected $fillable = [
         'user_id',
         'organization_id',
@@ -105,4 +117,19 @@ class AttestationApplication extends Model
     public function isSubmitted(): bool  { return $this->status === 'submitted'; }
     public function isFinalized(): bool  { return $this->status === 'finalized'; }
     public function hasProtocol(): bool  { return $this->protocol !== null; }
+
+    public function canTransitionTo(string $nextStatus): bool
+    {
+        return in_array($nextStatus, self::ALLOWED_TRANSITIONS[$this->status] ?? [], true);
+    }
+
+    public function transitionTo(string $nextStatus, array $attributes = []): bool
+    {
+        if (! $this->canTransitionTo($nextStatus)) {
+            return false;
+        }
+
+        $payload = array_merge($attributes, ['status' => $nextStatus]);
+        return $this->update($payload);
+    }
 }

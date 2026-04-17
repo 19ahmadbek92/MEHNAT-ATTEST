@@ -18,8 +18,13 @@ class PlatformSmokeTest extends TestCase
 
     public function test_home_and_select_type_render(): void
     {
-        $this->get('/')->assertOk();
+        $this->get('/')
+            ->assertOk()
+            ->assertHeader('X-Frame-Options', 'DENY')
+            ->assertHeader('X-Content-Type-Options', 'nosniff');
+
         $this->get(route('auth.select-type'))->assertOk();
+        $this->get(route('healthz'))->assertOk()->assertJsonStructure(['status', 'checks']);
     }
 
     public function test_critical_named_routes_are_registered(): void
@@ -27,6 +32,7 @@ class PlatformSmokeTest extends TestCase
         foreach ([
             'home',
             'dashboard',
+            'healthz',
             'auth.select-type',
             'login',
             'admin.dashboard',
@@ -74,5 +80,11 @@ class PlatformSmokeTest extends TestCase
         $expert = User::factory()->create(['role' => 'expert']);
 
         $this->actingAs($expert)->get(route('ministry.expertise.index'))->assertOk();
+    }
+
+    public function test_demo_sso_routes_are_closed_in_testing_environment(): void
+    {
+        $this->get(route('auth.oneid.redirect'))->assertNotFound();
+        $this->get(route('auth.eri.login'))->assertNotFound();
     }
 }

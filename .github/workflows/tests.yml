@@ -38,3 +38,9 @@ jobs:
 
       - name: Run tests
         run: php artisan test
+
+      - name: Run release gate checks
+        run: php artisan release:gate
+
+      - name: Security dependency audit
+        run: composer audit || true

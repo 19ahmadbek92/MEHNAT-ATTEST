@@ -3,28 +3,28 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Services\Identity\IdentityProviderManager;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use RuntimeException;
 
 class EriController extends Controller
 {
-    public function login()
+    public function __construct(private readonly IdentityProviderManager $identityManager)
     {
-        // Demo ERI login (real hayotda E-IMZO orqali imzolash va ma'lumotlarni olish kerak bo'ladi)
-        $user = User::updateOrCreate(
-            ['tin' => '123456789'],
-            [
-                'name' => 'ERI Company',
-                'email' => 'company@eri.uz',
-                'password' => bcrypt('password'),
-                'role' => 'employer',
-                'person_type' => 'yuridik',
-                'is_verified' => true,
-            ]
-        );
+    }
 
-        Auth::login($user);
+    public function login(Request $request): RedirectResponse
+    {
+        try {
+            $user = $this->identityManager->eri()->resolveUser($request);
+            Auth::login($user);
 
-        return redirect('/dashboard');
+            return redirect()->route('dashboard');
+        } catch (RuntimeException $e) {
+            return redirect()->route('login')
+                ->withErrors(['eri' => $e->getMessage()]);
+        }
     }
 }

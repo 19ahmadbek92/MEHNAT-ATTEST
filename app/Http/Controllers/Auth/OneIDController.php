@@ -3,20 +3,31 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Services\Identity\IdentityProviderManager;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use RuntimeException;
 
 class OneIDController extends Controller
 {
+    public function __construct(private readonly IdentityProviderManager $identityManager)
+    {
+    }
+
     /**
      * OneID xizmatiga yo'naltirish (demo varianti).
      *
      * Real integratsiyada bu yerda OneID SSO URL'iga redirect qilasiz.
      */
-    public function redirect()
+    public function redirect(Request $request): RedirectResponse
     {
-        // Demo: to'g'ridan-to'g'ri callback route'iga yuboramiz.
-        return redirect()->route('auth.oneid.callback');
+        try {
+            return $this->identityManager->oneId()->redirect($request);
+        } catch (RuntimeException $e) {
+            return redirect()->route('login')
+                ->withErrors(['oneid' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -25,28 +36,16 @@ class OneIDController extends Controller
      * Real holatda bu metod OneID'dan kelgan ma'lumotlarni qabul qiladi,
      * PINFL bo'yicha foydalanuvchini topadi yoki yaratadi va tizimga kiritadi.
      */
-    public function callback()
+    public function callback(Request $request): RedirectResponse
     {
-        // Demo ma'lumot (real hayotda OneID javobidan olinadi)
-        $oneidData = [
-            'name' => 'OneID User',
-            'pinfl' => '12345678901234',
-        ];
+        try {
+            $user = $this->identityManager->oneId()->resolveUser($request);
+            Auth::login($user);
 
-        $user = User::updateOrCreate(
-            ['pinfl' => $oneidData['pinfl']], // PINFL bo‘yicha qidiradi
-            [
-                'name' => $oneidData['name'],
-                'email' => $oneidData['pinfl'] . '@oneid.uz',
-                'password' => bcrypt('password'),
-                'role' => 'employer',
-                'person_type' => 'jismoniy',
-                'is_verified' => true,
-            ]
-        );
-
-        Auth::login($user);
-
-        return redirect()->route('dashboard');
+            return redirect()->route('dashboard');
+        } catch (RuntimeException $e) {
+            return redirect()->route('login')
+                ->withErrors(['oneid' => $e->getMessage()]);
+        }
     }
 }
