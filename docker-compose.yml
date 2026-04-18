@@ -19,6 +19,7 @@ services:
 
   worker:
     image: e-attestatsiya:latest
+    command: ["/usr/local/bin/laravel-role-cmd"]
     env_file:
       - .env
     environment:
@@ -31,6 +32,7 @@ services:
 
   scheduler:
     image: e-attestatsiya:latest
+    command: ["/usr/local/bin/laravel-role-cmd"]
     env_file:
       - .env
     environment:

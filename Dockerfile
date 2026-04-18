@@ -27,8 +27,12 @@ RUN mkdir -p /var/www/html/storage/logs \
     && chown -R application:application /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Runtime role script
-COPY docker/entrypoint.sh /usr/local/bin/app-entrypoint
-RUN chmod +x /usr/local/bin/app-entrypoint
+# Laravel: webdevops entrypoint avvalo /opt/docker/provision/entrypoint.d/*.sh ni ishga tushiradi, keyin CMD bo'yicha.
+COPY docker/provision/entrypoint.d/10-laravel.sh /opt/docker/provision/entrypoint.d/10-laravel.sh
+RUN chmod +x /opt/docker/provision/entrypoint.d/10-laravel.sh
 
-CMD ["/usr/local/bin/app-entrypoint"]
+COPY docker/laravel-role-cmd.sh /usr/local/bin/laravel-role-cmd
+RUN chmod +x /usr/local/bin/laravel-role-cmd
+
+# Tasvir CMD=supervisord bo'lishi kerak — aks holda nginx ishlaydi, lekin PHP-FPM (9000) yo'qoladi.
+CMD ["supervisord"]
