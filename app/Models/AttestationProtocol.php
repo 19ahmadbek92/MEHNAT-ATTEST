@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 
 class AttestationProtocol extends Model
 {
@@ -43,7 +42,7 @@ class AttestationProtocol extends Model
         'additional_leave_days',    // MK 183-band: Qo'shimcha ta'til
         'reduced_work_hours',       // MK 184-band: Qisqartirilgan ish vaqti
         'has_medical_food',         // SanQvaM 0184-05: Sut/tenglashtirilgan mahsulot
-        'has_therapeutic_nutrition',// Davolash-profilaktik ovqatlanish
+        'has_therapeutic_nutrition', // Davolash-profilaktik ovqatlanish
         'requires_benefits',        // Imtiyozlar kerakmi (umumiy)
 
         // ── XALIKK-2024 Kasblar klassifikatori ──
@@ -59,23 +58,23 @@ class AttestationProtocol extends Model
     ];
 
     protected $casts = [
-        'chemical_factors'        => 'array',
-        'fibrogenic_aerosols'     => 'array',
-        'biological_factors'      => 'array',
+        'chemical_factors' => 'array',
+        'fibrogenic_aerosols' => 'array',
+        'biological_factors' => 'array',
         'noise_vibration_factors' => 'array',
-        'emf_factors'             => 'array',
-        'optical_radiation'       => 'array',
-        'microclimate_factors'    => 'array',
-        'lighting_factors'        => 'array',
-        'ionizing_radiation'      => 'array',
-        'atmospheric_pressure'    => 'array',
-        'ppe_assessment'          => 'array',
-        'exposure_duration'       => 'array',
-        'requires_benefits'       => 'boolean',
-        'has_medical_food'        => 'boolean',
+        'emf_factors' => 'array',
+        'optical_radiation' => 'array',
+        'microclimate_factors' => 'array',
+        'lighting_factors' => 'array',
+        'ionizing_radiation' => 'array',
+        'atmospheric_pressure' => 'array',
+        'ppe_assessment' => 'array',
+        'exposure_duration' => 'array',
+        'requires_benefits' => 'boolean',
+        'has_medical_food' => 'boolean',
         'has_therapeutic_nutrition' => 'boolean',
         'is_representative_sample' => 'boolean',
-        'reduced_work_hours'      => 'decimal:1',
+        'reduced_work_hours' => 'decimal:1',
     ];
 
     /* ── Munosabatlar ── */
@@ -93,13 +92,13 @@ class AttestationProtocol extends Model
     public static function classLabel(string $cls): array
     {
         return match ($cls) {
-            '1'   => ['Optimal (1-sinf)', 'green'],
-            '2'   => ['Ruxsat etilgan (2-sinf)', 'blue'],
+            '1' => ['Optimal (1-sinf)', 'green'],
+            '2' => ['Ruxsat etilgan (2-sinf)', 'blue'],
             '3.1' => ['Zararli — 1-daraja (3.1)', 'orange'],
             '3.2' => ['Zararli — 2-daraja (3.2)', 'orange'],
             '3.3' => ['Zararli — 3-daraja (3.3)', 'red'],
             '3.4' => ['Zararli — 4-daraja (3.4)', 'red'],
-            '4'   => ['Xavfli (4-sinf)', 'red'],
+            '4' => ['Xavfli (4-sinf)', 'red'],
             default => ['Aniqlanmagan', 'gray'],
         };
     }
@@ -110,7 +109,7 @@ class AttestationProtocol extends Model
         $cls = $this->overall_class;
         $leave = 0;
         $hours = null;
-        $milk  = false;
+        $milk = false;
 
         if (in_array($cls, ['3.1', '3.2', '3.3', '3.4', '4'])) {
             // MK 183-band: Qo'shimcha ta'til
@@ -119,7 +118,7 @@ class AttestationProtocol extends Model
                 '3.2' => 6,
                 '3.3' => 12,
                 '3.4' => 12,
-                '4'   => 12,
+                '4' => 12,
                 default => 0,
             };
             // MK 184-band: Qisqartirilgan ish vaqti
@@ -129,10 +128,10 @@ class AttestationProtocol extends Model
         }
 
         return [
-            'leave_days'     => $leave,
-            'work_hours'     => $hours,
-            'milk_benefit'   => $milk,
-            'requires_ppq'   => in_array($cls, ['3.3', '3.4', '4']),
+            'leave_days' => $leave,
+            'work_hours' => $hours,
+            'milk_benefit' => $milk,
+            'requires_ppq' => in_array($cls, ['3.3', '3.4', '4']),
         ];
     }
 
@@ -140,11 +139,11 @@ class AttestationProtocol extends Model
     public function injuryHazardLabel(): string
     {
         return match ($this->injury_hazard_class) {
-            'low'      => '✅ Past xavf',
-            'medium'   => '⚠️ O\'rta xavf',
-            'high'     => '🔶 Yuqori xavf',
+            'low' => '✅ Past xavf',
+            'medium' => '⚠️ O\'rta xavf',
+            'high' => '🔶 Yuqori xavf',
             'critical' => '🔴 Kritik xavf',
-            default    => '—',
+            default => '—',
         };
     }
 }

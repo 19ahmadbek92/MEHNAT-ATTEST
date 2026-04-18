@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
-use App\Models\AttestationApplication;
 use App\Models\StateExpertiseApplication;
 use Illuminate\Http\Request;
 
@@ -15,7 +14,7 @@ class StateExpertiseController extends Controller
     public function index()
     {
         $organizationId = auth()->user()->organization_id;
-        if (!$organizationId) {
+        if (! $organizationId) {
             return redirect()->route('employer.organization.index')->with('error', 'Iltimos, avvalo korxona ma\'lumotlarini kiriting.');
         }
 

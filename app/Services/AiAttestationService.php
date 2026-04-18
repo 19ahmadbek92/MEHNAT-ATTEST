@@ -21,7 +21,7 @@ class AiAttestationService
 
         // 2. Komissiya o'lchovlari - AI orqali generatsiya qilish
         $metrics = $this->generateMetricsForWorkplace($application->workplace_name);
-        
+
         $evaluation = AttestationEvaluation::create([
             'application_id' => $application->id,
             'evaluator_id' => $application->user_id, // Avtomatlashtirilgan tarzda o'zi yuborgan foydalanuvchi yoki admin ID bo'lishi mumkin, lekin tizim uchun null bo'lmasligi kerak
@@ -56,7 +56,7 @@ class AiAttestationService
     private function generateMetricsForWorkplace(string $workplaceName): array
     {
         $name = mb_strtolower($workplaceName);
-        
+
         // Standart xavfsiz qiymatlar
         $metrics = [
             'noise' => rand(40, 60), // dB
@@ -100,8 +100,13 @@ class AiAttestationService
      */
     private function determineWorkplaceClass(int $score): string
     {
-        if ($score >= 85) return 'optimal';
-        if ($score >= 60) return 'ruxsat_etilgan';
+        if ($score >= 85) {
+            return 'optimal';
+        }
+        if ($score >= 60) {
+            return 'ruxsat_etilgan';
+        }
+
         return 'zararli_xavfli';
     }
 }

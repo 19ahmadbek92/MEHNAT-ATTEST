@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 
 class StateExpertiseApplication extends Model
 {
@@ -51,34 +51,34 @@ class StateExpertiseApplication extends Model
     ];
 
     protected $casts = [
-        'application_ids'       => 'array',
-        'submitted_at'          => 'datetime',
-        'institute_deadline'    => 'date',
-        'ministry_deadline'     => 'date',
-        'total_deadline'        => 'date',
+        'application_ids' => 'array',
+        'submitted_at' => 'datetime',
+        'institute_deadline' => 'date',
+        'ministry_deadline' => 'date',
+        'total_deadline' => 'date',
         'institute_reviewed_at' => 'datetime',
-        'ministry_reviewed_at'  => 'datetime',
-        'payment_confirmed'     => 'boolean',
-        'is_auto_approved'      => 'boolean',
-        'auto_approved_at'      => 'datetime',
+        'ministry_reviewed_at' => 'datetime',
+        'payment_confirmed' => 'boolean',
+        'is_auto_approved' => 'boolean',
+        'auto_approved_at' => 'datetime',
         'institute_return_deadline' => 'date',
-        'ministry_return_deadline'  => 'date',
-        'payment_amount'        => 'decimal:2',
+        'ministry_return_deadline' => 'date',
+        'payment_amount' => 'decimal:2',
     ];
 
     /* ── Boot: yangi ariza yaratilganda muddatlarni avtomatik o'rnatish ── */
     protected static function booted(): void
     {
         static::creating(function (self $model) {
-            if (!$model->submitted_at) {
+            if (! $model->submitted_at) {
                 $model->submitted_at = now();
             }
             // Tartibnoma 26-band: Institut — 15 kalendar kun
-            if (!$model->institute_deadline) {
+            if (! $model->institute_deadline) {
                 $model->institute_deadline = now()->addDays(15)->toDateString();
             }
             // Tartibnoma 29-band: Jami 25 kun
-            if (!$model->total_deadline) {
+            if (! $model->total_deadline) {
                 $model->total_deadline = now()->addDays(25)->toDateString();
             }
         });
@@ -149,7 +149,10 @@ class StateExpertiseApplication extends Model
      */
     public function instituteDaysRemaining(): int
     {
-        if (!$this->institute_deadline) return 0;
+        if (! $this->institute_deadline) {
+            return 0;
+        }
+
         return max(0, Carbon::today()->diffInDays($this->institute_deadline, false));
     }
 
@@ -158,7 +161,10 @@ class StateExpertiseApplication extends Model
      */
     public function totalDaysRemaining(): int
     {
-        if (!$this->total_deadline) return 0;
+        if (! $this->total_deadline) {
+            return 0;
+        }
+
         return max(0, Carbon::today()->diffInDays($this->total_deadline, false));
     }
 
@@ -167,17 +173,19 @@ class StateExpertiseApplication extends Model
      */
     public function autoApproveIfOverdue(): bool
     {
-        if ($this->isTotalDeadlineExpired() && !$this->is_auto_approved && $this->ministry_status === 'pending') {
+        if ($this->isTotalDeadlineExpired() && ! $this->is_auto_approved && $this->ministry_status === 'pending') {
             $this->update([
-                'is_auto_approved'   => true,
-                'auto_approved_at'   => now(),
-                'ministry_status'    => 'approved',
-                'conclusion_number'  => $this->generateConclusionNumber(),
-                'conclusion_series'  => 'DX',
-                'conclusion_blank_no'=> $this->generateBlankNumber(),
+                'is_auto_approved' => true,
+                'auto_approved_at' => now(),
+                'ministry_status' => 'approved',
+                'conclusion_number' => $this->generateConclusionNumber(),
+                'conclusion_series' => 'DX',
+                'conclusion_blank_no' => $this->generateBlankNumber(),
             ]);
+
             return true;
         }
+
         return false;
     }
 
@@ -187,9 +195,10 @@ class StateExpertiseApplication extends Model
      */
     public static function generateConclusionNumber(): string
     {
-        $year   = now()->year;
+        $year = now()->year;
         $lastNo = self::whereYear('created_at', $year)->max('id') ?? 0;
-        return 'DX-' . $year . '-' . str_pad($lastNo + 1, 6, '0', STR_PAD_LEFT);
+
+        return 'DX-'.$year.'-'.str_pad($lastNo + 1, 6, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -198,14 +207,18 @@ class StateExpertiseApplication extends Model
     public static function generateBlankNumber(): string
     {
         $year = now()->year;
-        $seq  = self::whereYear('created_at', $year)->count() + 1;
-        return 'DX/' . substr($year, -2) . '/' . str_pad($seq, 6, '0', STR_PAD_LEFT);
+        $seq = self::whereYear('created_at', $year)->count() + 1;
+
+        return 'DX/'.substr($year, -2).'/'.str_pad($seq, 6, '0', STR_PAD_LEFT);
     }
 
     /* ── Status yorliqlari ── */
     public function statusLabel(): string
     {
-        if ($this->is_auto_approved) return '⚡ Muddati o\'tganligi sababli avtomatik tasdiqlandi';
+        if ($this->is_auto_approved) {
+            return '⚡ Muddati o\'tganligi sababli avtomatik tasdiqlandi';
+        }
+
         return match (true) {
             $this->ministry_status === 'approved' => '✅ Davlat xulosasi berildi',
             $this->ministry_status === 'returned' => '↩️ Vazirlik qaytardi',

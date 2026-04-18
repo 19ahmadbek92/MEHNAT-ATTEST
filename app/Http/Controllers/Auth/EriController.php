@@ -11,9 +11,7 @@ use RuntimeException;
 
 class EriController extends Controller
 {
-    public function __construct(private readonly IdentityProviderManager $identityManager)
-    {
-    }
+    public function __construct(private readonly IdentityProviderManager $identityManager) {}
 
     public function login(Request $request): RedirectResponse
     {

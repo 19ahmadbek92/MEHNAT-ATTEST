@@ -9,9 +9,7 @@ use Illuminate\Http\Request;
 
 class ApplicationReviewController extends Controller
 {
-    public function __construct(private readonly AuditLogger $auditLogger)
-    {
-    }
+    public function __construct(private readonly AuditLogger $auditLogger) {}
 
     public function index(Request $request)
     {
@@ -23,7 +21,7 @@ class ApplicationReviewController extends Controller
             AttestationApplication::STATUS_HR_REJECTED,
             AttestationApplication::STATUS_FINALIZED,
         ];
-        if (!in_array($status, $allowed, true)) {
+        if (! in_array($status, $allowed, true)) {
             $status = AttestationApplication::STATUS_SUBMITTED;
         }
 

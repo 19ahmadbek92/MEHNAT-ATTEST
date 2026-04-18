@@ -11,6 +11,7 @@ class LaboratoryProfileController extends Controller
     public function index()
     {
         $laboratory = auth()->user()->laboratory;
+
         return view('laboratory.profile.index', compact('laboratory'));
     }
 
@@ -27,7 +28,7 @@ class LaboratoryProfileController extends Controller
         $validated['is_active'] = true;
 
         $laboratory = Laboratory::create($validated);
-        
+
         $user = auth()->user();
         $user->laboratory_id = $laboratory->id;
         $user->save();
@@ -43,7 +44,7 @@ class LaboratoryProfileController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'stir_inn' => 'required|string|max:14|unique:laboratories,stir_inn,' . $laboratory->id,
+            'stir_inn' => 'required|string|max:14|unique:laboratories,stir_inn,'.$laboratory->id,
             'accreditation_certificate_number' => 'required|string|max:100',
             'accreditation_expiry_date' => 'required|date',
             'accreditation_scope' => 'required|string',

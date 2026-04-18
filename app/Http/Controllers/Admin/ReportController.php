@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AttestationApplication;
 use App\Models\AttestationCampaign;
-use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
@@ -28,7 +27,7 @@ class ReportController extends Controller
 
     public function campaignCsv(AttestationCampaign $campaign)
     {
-        $filename = 'campaign_' . $campaign->id . '_applications.csv';
+        $filename = 'campaign_'.$campaign->id.'_applications.csv';
 
         $applications = AttestationApplication::with(['user'])
             ->where('campaign_id', $campaign->id)
@@ -72,4 +71,3 @@ class ReportController extends Controller
         ]);
     }
 }
-

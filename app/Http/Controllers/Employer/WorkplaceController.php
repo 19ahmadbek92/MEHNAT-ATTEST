@@ -12,11 +12,12 @@ class WorkplaceController extends Controller
     public function index()
     {
         $organization = Auth::user()->organization;
-        if (!$organization) {
+        if (! $organization) {
             return redirect()->route('employer.organization.index')->with('error', 'Iltimos, avval tashkilot profilingizni tasdiqlang.');
         }
 
         $workplaces = $organization->workplaces()->latest()->paginate(10);
+
         return view('employer.workplaces.index', compact('workplaces'));
     }
 

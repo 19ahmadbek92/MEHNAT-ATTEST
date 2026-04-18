@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('critical-actions', function (Request $request) {
             $userId = optional($request->user())->id ?? 'guest';
+
             return Limit::perMinute(30)->by($userId.'|'.$request->ip());
         });
 

@@ -9,9 +9,7 @@ use Illuminate\Http\Request;
 
 class ExpertiseController extends Controller
 {
-    public function __construct(private readonly AuditLogger $auditLogger)
-    {
-    }
+    public function __construct(private readonly AuditLogger $auditLogger) {}
 
     public function index()
     {
@@ -38,6 +36,7 @@ class ExpertiseController extends Controller
     public function show(StateExpertiseApplication $expertise)
     {
         $expertise->load(['organization', 'laboratory', 'instituteExpert', 'ministryExpert']);
+
         return view('ministry.expertise.show', compact('expertise'));
     }
 
@@ -49,29 +48,29 @@ class ExpertiseController extends Controller
         }
 
         $validated = $request->validate([
-            'action'          => 'required|in:approve,return',
-            'comment'         => 'nullable|string|max:2000',
-            'return_reason'   => 'required_if:action,return|string|max:2000',
+            'action' => 'required|in:approve,return',
+            'comment' => 'nullable|string|max:2000',
+            'return_reason' => 'required_if:action,return|string|max:2000',
             // Tartibnoma 31-band: Aniq huquqiy norma ko'rsatilishi MAJBURIY
-            'return_legal_ref'=> 'required_if:action,return|string|max:500',
+            'return_legal_ref' => 'required_if:action,return|string|max:500',
             // Masalan: "SanQvaM 0069-24 Ilova №3, 5-band; Nizom 28-band"
-            'return_days'     => 'required_if:action,return|integer|min:10',
+            'return_days' => 'required_if:action,return|integer|min:10',
             // Min 10 ish kuni (Tartibnoma 31-band)
         ]);
 
         if ($validated['action'] === 'approve') {
             // Xulosa raqami va blank raqami generatsiya qilish
-            $conclusionNo  = StateExpertiseApplication::generateConclusionNumber();
-            $blankNo       = StateExpertiseApplication::generateBlankNumber();
+            $conclusionNo = StateExpertiseApplication::generateConclusionNumber();
+            $blankNo = StateExpertiseApplication::generateBlankNumber();
 
             $expertise->update([
-                'ministry_status'      => 'approved',
-                'ministry_expert_id'   => auth()->id(),
-                'ministry_comment'     => $validated['comment'],
+                'ministry_status' => 'approved',
+                'ministry_expert_id' => auth()->id(),
+                'ministry_comment' => $validated['comment'],
                 'ministry_reviewed_at' => now(),
-                'conclusion_number'    => $conclusionNo,
-                'conclusion_series'    => 'DX',
-                'conclusion_blank_no'  => $blankNo,
+                'conclusion_number' => $conclusionNo,
+                'conclusion_series' => 'DX',
+                'conclusion_blank_no' => $blankNo,
             ]);
 
             $this->auditLogger->log($request, 'ministry.expertise.approved', $expertise, [
@@ -80,12 +79,12 @@ class ExpertiseController extends Controller
             ]);
 
             // Fake (Mock) API integratsiya chaqirig'i
-            $apiService = new \App\Services\MockIntegrationService();
+            $apiService = new \App\Services\MockIntegrationService;
             $apiService->sendConclusionToStateServices([
                 'conclusion_no' => $conclusionNo,
                 'organization_stir' => $expertise->organization->stir_inn ?? '000000000',
                 'status' => 'approved',
-                'date' => now()->toDateString()
+                'date' => now()->toDateString(),
             ]);
 
             return redirect()->route('ministry.expertise.index')
@@ -96,13 +95,13 @@ class ExpertiseController extends Controller
             $returnDeadline = now()->addWeekdays($validated['return_days']);
 
             $expertise->update([
-                'ministry_status'          => 'returned',
-                'ministry_expert_id'       => auth()->id(),
-                'ministry_comment'         => $validated['comment'],
-                'ministry_return_reason'   => $validated['return_reason'],
-                'ministry_return_legal_ref'=> $validated['return_legal_ref'],
+                'ministry_status' => 'returned',
+                'ministry_expert_id' => auth()->id(),
+                'ministry_comment' => $validated['comment'],
+                'ministry_return_reason' => $validated['return_reason'],
+                'ministry_return_legal_ref' => $validated['return_legal_ref'],
                 'ministry_return_deadline' => $returnDeadline->toDateString(),
-                'ministry_reviewed_at'     => now(),
+                'ministry_reviewed_at' => now(),
             ]);
 
             $this->auditLogger->log($request, 'ministry.expertise.returned', $expertise, [
@@ -111,7 +110,7 @@ class ExpertiseController extends Controller
             ]);
 
             return redirect()->route('ministry.expertise.index')
-                ->with('warning', '↩️ Hujjatlar qayta ishlash uchun qaytarildi. Muddat: ' . $returnDeadline->format('d.m.Y'));
+                ->with('warning', '↩️ Hujjatlar qayta ishlash uchun qaytarildi. Muddat: '.$returnDeadline->format('d.m.Y'));
         }
     }
 }

@@ -31,6 +31,7 @@ Artisan::command('release:gate', function () {
         if ($exitCode !== 0) {
             $this->error("Release gate failed on {$name}");
             Artisan::call('optimize:clear');
+
             return 1;
         }
     }
@@ -42,4 +43,3 @@ Artisan::command('release:gate', function () {
 
     return 0;
 })->purpose('Run go-live release gate checks');
-

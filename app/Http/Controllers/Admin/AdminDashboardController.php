@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\AttestationApplication;
 use App\Models\AttestationCampaign;
+use App\Models\User;
 
 class AdminDashboardController extends Controller
 {

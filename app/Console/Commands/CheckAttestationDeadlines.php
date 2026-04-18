@@ -7,7 +7,8 @@ use Illuminate\Console\Command;
 
 class CheckAttestationDeadlines extends Command
 {
-    protected $signature   = 'attestation:check-deadlines';
+    protected $signature = 'attestation:check-deadlines';
+
     protected $description = 'VM Qarori №263 §33: Muddati o\'tgan davlat ekspertizasi arizalarini avtomatik tasdiqlash va ogohlantirish';
 
     public function handle(): int
@@ -50,6 +51,7 @@ class CheckAttestationDeadlines extends Command
         }
 
         $this->info("Jarayon tugadi. Avtomatik tasdiqlangan: {$autoApproved}");
+
         return Command::SUCCESS;
     }
 }

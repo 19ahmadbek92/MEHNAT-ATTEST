@@ -18,6 +18,7 @@ class AttestationCampaignController extends Controller
     public function show(AttestationCampaign $campaign)
     {
         $campaign->load('applications');
+
         return view('admin.campaigns.show', compact('campaign'));
     }
 
@@ -71,4 +72,3 @@ class AttestationCampaignController extends Controller
             ->with('status', 'Kampaniya o‘chirildi.');
     }
 }
-

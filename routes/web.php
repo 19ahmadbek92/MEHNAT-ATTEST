@@ -1,20 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\HealthController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Auth\EriController;
-use App\Http\Controllers\Auth\OneIDController;
-use App\Http\Controllers\Auth\SelectTypeController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AttestationCampaignController;
 use App\Http\Controllers\Admin\ReportController;
-use App\Http\Controllers\Employee\ApplicationController;
+use App\Http\Controllers\Auth\EriController;
+use App\Http\Controllers\Auth\OneIDController;
+use App\Http\Controllers\Auth\SelectTypeController;
 use App\Http\Controllers\Commission\EvaluationController;
-use App\Http\Controllers\HR\ApplicationReviewController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Employee\AiProcessController;
+use App\Http\Controllers\Employee\ApplicationController;
+use App\Http\Controllers\HealthController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HR\ApplicationReviewController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/healthz', HealthController::class)->name('healthz');
@@ -91,7 +91,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:employer'])->group(function () {
         // Employer's Organization
         Route::resource('employer/organization', \App\Http\Controllers\Employer\OrganizationController::class)->only(['index', 'store', 'update'])->names('employer.organization');
-        
+
         // Employer's Workplaces
         Route::resource('employer/workplaces', \App\Http\Controllers\Employer\WorkplaceController::class)->names('employer.workplaces');
         Route::get('employer/workplaces/{workplace}/print', [\App\Http\Controllers\Employer\WorkplaceController::class, 'print'])->name('employer.workplaces.print');

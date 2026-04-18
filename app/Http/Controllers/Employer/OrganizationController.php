@@ -14,6 +14,7 @@ class OrganizationController extends Controller
     public function index()
     {
         $organization = auth()->user()->organization;
+
         return view('employer.organization.index', compact('organization'));
     }
 
@@ -36,7 +37,7 @@ class OrganizationController extends Controller
         ]);
 
         $organization = Organization::create($validated);
-        
+
         $user = auth()->user();
         $user->organization_id = $organization->id;
         $user->save();
@@ -55,7 +56,7 @@ class OrganizationController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'stir_inn' => 'required|string|max:14|unique:organizations,stir_inn,' . $organization->id,
+            'stir_inn' => 'required|string|max:14|unique:organizations,stir_inn,'.$organization->id,
             'ifut_code' => 'nullable|string|max:20',
             'mhobt_code' => 'nullable|string|max:20',
             'parent_organization' => 'nullable|string|max:255',

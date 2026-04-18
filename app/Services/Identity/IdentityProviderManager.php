@@ -14,18 +14,18 @@ class IdentityProviderManager
     public function oneId(): OneIdProviderContract
     {
         if ((bool) config('demo.sso', false) || app()->isLocal()) {
-            return new DemoOneIdProvider();
+            return new DemoOneIdProvider;
         }
 
-        return new RealOneIdProvider();
+        return new RealOneIdProvider;
     }
 
     public function eri(): EriProviderContract
     {
         if ((bool) config('demo.sso', false) || app()->isLocal()) {
-            return new DemoEriProvider();
+            return new DemoEriProvider;
         }
 
-        return new RealEriProvider();
+        return new RealEriProvider;
     }
 }

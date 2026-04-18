@@ -10,8 +10,11 @@ class AttestationApplication extends Model
     use HasFactory;
 
     public const STATUS_SUBMITTED = 'submitted';
+
     public const STATUS_HR_APPROVED = 'hr_approved';
+
     public const STATUS_HR_REJECTED = 'hr_rejected';
+
     public const STATUS_FINALIZED = 'finalized';
 
     public const ALLOWED_TRANSITIONS = [
@@ -51,8 +54,8 @@ class AttestationApplication extends Model
 
     protected $casts = [
         'hr_reviewed_at' => 'datetime',
-        'finalized_at'   => 'datetime',
-        'final_score'    => 'decimal:2',
+        'finalized_at' => 'datetime',
+        'final_score' => 'decimal:2',
         'hazard_factors' => 'array',
     ];
 
@@ -60,10 +63,10 @@ class AttestationApplication extends Model
     public function getWorkplaceClassLabel(): string
     {
         return match ($this->workplace_class) {
-            'optimal'        => 'Optimal (1-klass)',
+            'optimal' => 'Optimal (1-klass)',
             'ruxsat_etilgan' => 'Ruxsat etilgan (2-klass)',
             'zararli_xavfli' => 'Zararli / Xavfli (3-klass)',
-            default          => 'Aniqlanmagan',
+            default => 'Aniqlanmagan',
         };
     }
 
@@ -114,9 +117,20 @@ class AttestationApplication extends Model
     }
 
     /* ── Status helpers ── */
-    public function isSubmitted(): bool  { return $this->status === 'submitted'; }
-    public function isFinalized(): bool  { return $this->status === 'finalized'; }
-    public function hasProtocol(): bool  { return $this->protocol !== null; }
+    public function isSubmitted(): bool
+    {
+        return $this->status === 'submitted';
+    }
+
+    public function isFinalized(): bool
+    {
+        return $this->status === 'finalized';
+    }
+
+    public function hasProtocol(): bool
+    {
+        return $this->protocol !== null;
+    }
 
     public function canTransitionTo(string $nextStatus): bool
     {
@@ -130,6 +144,7 @@ class AttestationApplication extends Model
         }
 
         $payload = array_merge($attributes, ['status' => $nextStatus]);
+
         return $this->update($payload);
     }
 }

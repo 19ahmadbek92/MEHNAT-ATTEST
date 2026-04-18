@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Laboratory;
 
 use App\Http\Controllers\Controller;
-use App\Models\Workplace;
-use App\Models\MeasurementResult;
 use App\Models\AttestationTender;
+use App\Models\Workplace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +13,7 @@ class MeasurementController extends Controller
     public function index()
     {
         $laboratory = Auth::user()->laboratory;
-        if (!$laboratory) {
+        if (! $laboratory) {
             return redirect()->route('laboratory.profile.index')
                 ->with('error', 'Iltimos, avvalo laboratoriya profilingizni to\'ldiring.');
         }
@@ -35,7 +34,7 @@ class MeasurementController extends Controller
     public function create(Workplace $workplace)
     {
         $laboratory = Auth::user()->laboratory;
-        if (!$laboratory) {
+        if (! $laboratory) {
             return redirect()->route('laboratory.profile.index')
                 ->with('error', 'Sizda laboratoriya profili mavjud emas.');
         }
@@ -46,7 +45,7 @@ class MeasurementController extends Controller
             ->whereIn('status', ['awarded', 'completed'])
             ->exists();
 
-        if (!$hasTender) {
+        if (! $hasTender) {
             abort(403, 'Bu ish o\'rni sizning laboratoriyangizga tegishli emas.');
         }
 
@@ -69,7 +68,7 @@ class MeasurementController extends Controller
             'Emotsional zo\'riqish',
             'Ish rejimi (Smena va dam olish)',
             'Monotonlik',
-            'Ionlashtiruvchi nurlanish'
+            'Ionlashtiruvchi nurlanish',
         ];
 
         return view('laboratory.measurements.create', compact('workplace', 'factors'));
@@ -86,7 +85,7 @@ class MeasurementController extends Controller
         ]);
 
         $laboratory = Auth::user()->laboratory;
-        if (!$laboratory) {
+        if (! $laboratory) {
             return back()->with('error', 'Sizda laboratoriya profili mavjud emas.');
         }
 
@@ -96,7 +95,7 @@ class MeasurementController extends Controller
             ->whereIn('status', ['awarded', 'completed'])
             ->exists();
 
-        if (!$hasTender) {
+        if (! $hasTender) {
             return back()->with('error', 'Bu ish o\'rni uchun sizda shartnoma mavjud emas.');
         }
 
@@ -109,7 +108,7 @@ class MeasurementController extends Controller
                 'norm_value' => $measurement['norm_value'],
                 'danger_class' => $measurement['danger_class'],
                 'measured_at' => now(),
-                'protocol_number' => 'PRT-' . now()->format('ymd') . '-' . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT),
+                'protocol_number' => 'PRT-'.now()->format('ymd').'-'.str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT),
             ]);
             $savedCount++;
         }

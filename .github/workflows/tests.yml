@@ -19,6 +19,9 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
+      - name: Laravel Pint (code style)
+        run: vendor/bin/pint --test
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

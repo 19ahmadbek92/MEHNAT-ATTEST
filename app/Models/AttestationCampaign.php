@@ -22,4 +22,3 @@ class AttestationCampaign extends Model
         return $this->hasMany(AttestationApplication::class, 'campaign_id');
     }
 }
-

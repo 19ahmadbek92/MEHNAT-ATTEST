@@ -11,10 +11,10 @@ return new class extends Migration
         Schema::table('attestation_applications', function (Blueprint $table) {
             // Add organization_id after user_id (nullable so existing rows don't break)
             $table->foreignId('organization_id')
-                  ->nullable()
-                  ->after('user_id')
-                  ->constrained('organizations')
-                  ->nullOnDelete();
+                ->nullable()
+                ->after('user_id')
+                ->constrained('organizations')
+                ->nullOnDelete();
         });
     }
 

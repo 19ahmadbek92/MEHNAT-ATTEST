@@ -25,7 +25,7 @@ class AiProcessController extends Controller
 
             return back()->with('status', '✅ Sun\'iy intellekt arizangizni avtomatik tahlil qildi va yakuniy qarorni qabul qildi.');
         } catch (\Exception $e) {
-            return back()->with('error', 'AI tizimida xatolik yuz berdi: ' . $e->getMessage());
+            return back()->with('error', 'AI tizimida xatolik yuz berdi: '.$e->getMessage());
         }
     }
 }

@@ -17,7 +17,7 @@ class HealthController extends Controller
             'storage' => $this->storageOk(),
         ];
 
-        $ok = !in_array(false, $checks, true);
+        $ok = ! in_array(false, $checks, true);
 
         return response()->json([
             'status' => $ok ? 'ok' : 'degraded',
@@ -30,6 +30,7 @@ class HealthController extends Controller
     {
         try {
             DB::select('select 1');
+
             return true;
         } catch (\Throwable) {
             return false;
@@ -41,6 +42,7 @@ class HealthController extends Controller
         try {
             $key = 'health:'.str()->random(8);
             Cache::put($key, 'ok', 10);
+
             return Cache::get($key) === 'ok';
         } catch (\Throwable) {
             return false;
@@ -55,6 +57,7 @@ class HealthController extends Controller
             $disk->put($path, 'ok');
             $ok = $disk->exists($path);
             $disk->delete($path);
+
             return $ok;
         } catch (\Throwable) {
             return false;
