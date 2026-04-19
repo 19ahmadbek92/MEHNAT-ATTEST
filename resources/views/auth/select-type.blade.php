@@ -309,18 +309,19 @@
                     <span class="eyebrow-text">Xavfsiz kirish</span>
                 </div>
 
-                @php($demoSso = app()->isLocal() || config('demo.sso'))
+                @php($showSso = app()->isLocal() || config('demo.sso') || config('identity.sso_routes_enabled'))
+                @php($demoSsoLabel = config('demo.sso') || app()->isLocal())
 
                 <div class="card-title">Kabinetga kiring</div>
                 <div class="card-subtitle">Kirish turini tanlang</div>
 
-                @if($demoSso)
+                @if($showSso)
                     <div class="login-options">
                         <a href="{{ route('auth.oneid.redirect') }}" class="login-option primary">
                             <div class="option-icon teal">👤</div>
                             <div class="option-body">
                                 <div class="option-title">Jismoniy shaxs</div>
-                                <div class="option-sub">OneID (demo) orqali kirish</div>
+                                <div class="option-sub">{{ $demoSsoLabel ? 'OneID (demo)' : 'OneID orqali kirish' }}</div>
                             </div>
                             <div class="option-arrow">→</div>
                         </a>
@@ -329,7 +330,7 @@
                             <div class="option-icon gold">🏢</div>
                             <div class="option-body">
                                 <div class="option-title">Yuridik shaxs</div>
-                                <div class="option-sub">ERI (demo) orqali kirish</div>
+                                <div class="option-sub">{{ $demoSsoLabel ? 'ERI (demo)' : 'ERI (E-IMZO) orqali kirish' }}</div>
                             </div>
                             <div class="option-arrow">→</div>
                         </a>
@@ -342,7 +343,7 @@
                     </div>
                 @else
                     <p style="font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; margin-bottom: 20px;">
-                        OneID va ERI integratsiyasi hozircha o‘chirilgan. Tizimga faqat ruxsat etilgan login va parol bilan kiring.
+                        OneID / ERI marshrutlari o‘chirilgan (APP_SSO_ROUTES_ENABLED=false). Tizimga login va parol bilan kiring.
                     </p>
                 @endif
 

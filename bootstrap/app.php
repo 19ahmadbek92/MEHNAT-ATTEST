@@ -42,7 +42,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
-            'demo.sso' => \App\Http\Middleware\EnsureDemoSsoEnabled::class,
+            'sso' => \App\Http\Middleware\EnsureSsoEntryEnabled::class,
         ]);
     })
 

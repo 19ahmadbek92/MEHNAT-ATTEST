@@ -170,13 +170,16 @@ Route::middleware(['auth'])->group(function () {
 // Kirish turini tanlash sahifasi
 Route::get('/login/select-type', SelectTypeController::class)->name('auth.select-type');
 
-Route::middleware(['guest', 'throttle:demo-auth', 'demo.sso'])->group(function () {
+Route::middleware(['guest', 'throttle:demo-auth', 'sso'])->group(function () {
     Route::get('/auth/oneid', [OneIDController::class, 'redirect'])
         ->name('auth.oneid.redirect');
 
     Route::get('/auth/oneid/callback', [OneIDController::class, 'callback'])
         ->name('auth.oneid.callback');
 
-    Route::get('/auth/eri', [EriController::class, 'login'])
+    Route::get('/auth/eri', [EriController::class, 'form'])
         ->name('auth.eri.login');
+
+    Route::post('/auth/eri', [EriController::class, 'verify'])
+        ->name('auth.eri.verify');
 });
