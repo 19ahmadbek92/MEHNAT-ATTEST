@@ -27,6 +27,11 @@ class PlatformSmokeTest extends TestCase
         $this->get(route('healthz'))
             ->assertOk()
             ->assertJsonStructure(['status', 'checks' => ['database', 'cache', 'storage']]);
+
+        // Render: Renderda health check sifatida /container-live.txt (nginx statik, FPMsiz).
+        // PHPUnit nginxsiz ishlaydi — fayl mavjudligini tekshiramiz.
+        $this->assertFileExists(public_path('container-live.txt'));
+        $this->assertStringContainsString('ok', (string) file_get_contents(public_path('container-live.txt')));
     }
 
     public function test_critical_named_routes_are_registered(): void

@@ -34,5 +34,8 @@ RUN chmod +x /opt/docker/provision/entrypoint.d/10-laravel.sh
 COPY docker/laravel-role-cmd.sh /usr/local/bin/laravel-role-cmd
 RUN chmod +x /usr/local/bin/laravel-role-cmd
 
+# Nginx php-fpmd dan keyin ishga tushsin (Render birinchi HEAD so'rovida 502 bo'lmasin).
+COPY docker/supervisor.d/zz-laravel-boot-order.conf /opt/docker/etc/supervisor.d/zz-laravel-boot-order.conf
+
 # Tasvir CMD=supervisord bo'lishi kerak — aks holda nginx ishlaydi, lekin PHP-FPM (9000) yo'qoladi.
 CMD ["supervisord"]
