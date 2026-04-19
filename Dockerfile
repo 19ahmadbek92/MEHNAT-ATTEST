@@ -37,5 +37,12 @@ RUN chmod +x /usr/local/bin/laravel-role-cmd
 # Nginx php-fpmd dan keyin ishga tushsin (Render birinchi HEAD so'rovida 502 bo'lmasin).
 COPY docker/supervisor.d/zz-laravel-boot-order.conf /opt/docker/etc/supervisor.d/zz-laravel-boot-order.conf
 
+# Nginx ishga tushishidan oldin PHP-FPM porti LISTEN bo'lsin (supervisor tartibi yetmasa ham).
+COPY docker/service.d/nginx.d/99-wait-php-fpm.sh /opt/docker/bin/service.d/nginx.d/99-wait-php-fpm.sh
+RUN chmod +x /opt/docker/bin/service.d/nginx.d/99-wait-php-fpm.sh
+
+# syslog-ng: use-dns(no) bilan bog'liq "dns-cache forced to no" ogohlantirishini bartaraf etish.
+RUN sed -i '/use-dns(no);/a dns-cache(no);' /opt/docker/etc/syslog-ng/syslog-ng.conf
+
 # Tasvir CMD=supervisord bo'lishi kerak — aks holda nginx ishlaydi, lekin PHP-FPM (9000) yo'qoladi.
 CMD ["supervisord"]
