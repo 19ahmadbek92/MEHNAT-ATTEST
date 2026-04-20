@@ -1,15 +1,7 @@
-# --- Composer: vendor alohida bosqich (Render: zip extract / download xatolari) ---
-FROM composer:2-bookworm AS vendor
+# --- Composer: vendor alohida bosqich (Render: zip / tarmoq / xotira) ---
+# Rasmiy composer:2 = Alpine; git/unzip allaqachon tasvirda. apt-get ishlatilmaydi.
+FROM composer:2 AS vendor
 WORKDIR /app
-
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        ca-certificates \
-        git \
-        openssh-client \
-        unzip \
-        zip \
-    && rm -rf /var/lib/apt/lists/*
 
 ENV COMPOSER_MEMORY_LIMIT=-1 \
     COMPOSER_ALLOW_SUPERUSER=1 \
