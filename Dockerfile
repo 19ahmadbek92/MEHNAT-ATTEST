@@ -1,4 +1,23 @@
-# --- Frontend (Vite) alohida bosqich: asosiy PHP tasvirida Node/apt muammolari bo‘lmasin ---
+# --- Composer: vendor alohida bosqich (Render kabi muhitlarda "Extracting archive" / OOM kamayadi) ---
+FROM composer:2 AS vendor
+WORKDIR /app
+
+ENV COMPOSER_MEMORY_LIMIT=-1 \
+    COMPOSER_ALLOW_SUPERUSER=1
+
+COPY composer.json composer.lock ./
+
+RUN composer install \
+    --no-dev \
+    --no-scripts \
+    --prefer-dist \
+    --no-interaction
+
+COPY . .
+
+RUN composer dump-autoload --optimize --no-dev --no-scripts
+
+# --- Frontend (Vite) ---
 FROM node:20-bookworm-slim AS frontend
 WORKDIR /build
 
@@ -26,9 +45,16 @@ COPY . /var/www/html/
 
 RUN rm -f /var/www/html/.env
 
-RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --prefer-dist --no-interaction
-
+COPY --from=vendor /app/vendor /var/www/html/vendor
 COPY --from=frontend /build/public/build /var/www/html/public/build
+
+# Build vaqtida package:discover (post-autoload-dump o'rniga)
+RUN cp /var/www/html/.env.example /var/www/html/.env \
+    && mkdir -p /var/www/html/database \
+    && touch /var/www/html/database/database.sqlite \
+    && php /var/www/html/artisan key:generate --force --no-interaction \
+    && php /var/www/html/artisan package:discover --ansi --no-interaction \
+    && rm -f /var/www/html/.env /var/www/html/database/database.sqlite
 
 RUN mkdir -p /var/www/html/storage/logs \
     && mkdir -p /var/www/html/storage/framework/{sessions,views,cache} \
