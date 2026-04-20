@@ -1,17 +1,34 @@
-# --- Composer: vendor alohida bosqich (Render kabi muhitlarda "Extracting archive" / OOM kamayadi) ---
-FROM composer:2 AS vendor
+# --- Composer: vendor alohida bosqich (Render: zip extract / download xatolari) ---
+FROM composer:2-bookworm AS vendor
 WORKDIR /app
 
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        git \
+        openssh-client \
+        unzip \
+        zip \
+    && rm -rf /var/lib/apt/lists/*
+
 ENV COMPOSER_MEMORY_LIMIT=-1 \
-    COMPOSER_ALLOW_SUPERUSER=1
+    COMPOSER_ALLOW_SUPERUSER=1 \
+    COMPOSER_MAX_PARALLEL_HTTP=2
 
 COPY composer.json composer.lock ./
 
+# Avvalo dist (tez); xato bo'lsa vendor tozalanadi va git clone (prefer-source) — zip/OOM muammolarini aylanadi.
 RUN composer install \
-    --no-dev \
-    --no-scripts \
-    --prefer-dist \
-    --no-interaction
+        --no-dev \
+        --no-scripts \
+        --prefer-dist \
+        --no-interaction \
+    || (rm -rf vendor \
+        && composer install \
+            --no-dev \
+            --no-scripts \
+            --prefer-source \
+            --no-interaction)
 
 COPY . .
 
