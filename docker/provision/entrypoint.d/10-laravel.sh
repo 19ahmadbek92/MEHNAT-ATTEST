@@ -30,7 +30,11 @@ ensure_sqlite_database_file() {
 
   mkdir -p "$(dirname "$DB_FILE")"
   touch "$DB_FILE"
+  chmod 775 "$(dirname "$DB_FILE")" || true
   chmod 664 "$DB_FILE" || true
+  if id -u application >/dev/null 2>&1; then
+    chown application:application "$(dirname "$DB_FILE")" "$DB_FILE" || true
+  fi
 }
 
 ensure_sqlite_database_file
