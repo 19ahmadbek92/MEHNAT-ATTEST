@@ -63,7 +63,7 @@ RUN cp /var/www/html/.env.example /var/www/html/.env \
     && touch /var/www/html/database/database.sqlite \
     && php /var/www/html/artisan key:generate --force --no-interaction \
     && php /var/www/html/artisan package:discover --ansi --no-interaction \
-    && rm -f /var/www/html/.env /var/www/html/database/database.sqlite
+    && rm -f /var/www/html/.env
 
 RUN mkdir -p /var/www/html/storage/logs \
     && mkdir -p /var/www/html/storage/framework/{sessions,views,cache} \

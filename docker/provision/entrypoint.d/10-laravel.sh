@@ -17,6 +17,24 @@ artisan() {
   fi
 }
 
+ensure_sqlite_database_file() {
+  if [ "${DB_CONNECTION:-sqlite}" != "sqlite" ]; then
+    return 0
+  fi
+
+  DB_FILE="${DB_DATABASE:-/var/www/html/database/database.sqlite}"
+  case "$DB_FILE" in
+    /*) ;;
+    *) DB_FILE="/var/www/html/${DB_FILE}" ;;
+  esac
+
+  mkdir -p "$(dirname "$DB_FILE")"
+  touch "$DB_FILE"
+  chmod 664 "$DB_FILE" || true
+}
+
+ensure_sqlite_database_file
+
 if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
   artisan migrate --force
 fi
