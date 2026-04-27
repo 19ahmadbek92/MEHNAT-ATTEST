@@ -100,7 +100,7 @@ class RealEriProvider implements EriProviderContract
         }
     }
 
-    private function verifySignedPayloadLocally(Request $request, string $signedPayload, string $tin): void
+    private function verifySignedPayloadLocally(Request $request, string $signedPayload): void
     {
         $challenge = (string) $request->session()->pull('eri_challenge', '');
         if ($challenge === '') {
@@ -124,7 +124,7 @@ class RealEriProvider implements EriProviderContract
             file_put_contents($tmpPkcs7, $binary);
 
             $flags = (int) PKCS7_DETACHED;
-            if (filter_var((string) env('ERI_PKCS7_NOVERIFY', false), FILTER_VALIDATE_BOOLEAN)) {
+            if ((bool) config('services.eri.pkcs7_noverify', false)) {
                 $flags |= (int) PKCS7_NOVERIFY;
             }
 

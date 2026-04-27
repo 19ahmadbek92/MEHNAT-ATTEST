@@ -28,7 +28,7 @@ class WorkplaceController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'nullable|string|max:50',
             'department' => 'nullable|string|max:255',
@@ -36,7 +36,13 @@ class WorkplaceController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        Auth::user()->organization->workplaces()->create($request->all());
+        $organization = Auth::user()->organization;
+        if (! $organization) {
+            return redirect()->route('employer.organization.index')
+                ->with('error', 'Iltimos, avval tashkilot profilingizni tasdiqlang.');
+        }
+
+        $organization->workplaces()->create($validated);
 
         return redirect()->route('employer.workplaces.index')->with('success', 'Ish o\'rni tizimga kiritildi.');
     }

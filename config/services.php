@@ -58,6 +58,7 @@ return [
         'client_secret' => env('ERI_CLIENT_SECRET'),
         'verification_url' => env('ERI_VERIFICATION_URL'),
         'verification_timeout' => (int) env('ERI_VERIFICATION_TIMEOUT', 30),
+        'pkcs7_noverify' => filter_var(env('ERI_PKCS7_NOVERIFY', false), FILTER_VALIDATE_BOOLEAN),
     ],
 
 ];

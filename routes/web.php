@@ -92,11 +92,15 @@ Route::middleware(['auth'])->group(function () {
         // Employer's Organization
         Route::resource('employer/organization', \App\Http\Controllers\Employer\OrganizationController::class)->only(['index', 'store', 'update'])->names('employer.organization');
 
-        // Employer's Workplaces
-        Route::resource('employer/workplaces', \App\Http\Controllers\Employer\WorkplaceController::class)->names('employer.workplaces');
+        // Employer's Workplaces (faqat amalga oshirilgan metodlar)
+        Route::resource('employer/workplaces', \App\Http\Controllers\Employer\WorkplaceController::class)
+            ->only(['index', 'create', 'store', 'show'])
+            ->names('employer.workplaces');
         Route::get('employer/workplaces/{workplace}/print', [\App\Http\Controllers\Employer\WorkplaceController::class, 'print'])->name('employer.workplaces.print');
 
-        Route::resource('employer/tenders', \App\Http\Controllers\Employer\AttestationTenderController::class)->names('employer.tenders');
+        Route::resource('employer/tenders', \App\Http\Controllers\Employer\AttestationTenderController::class)
+            ->only(['index', 'create', 'store', 'show'])
+            ->names('employer.tenders');
         // Tender lifecycle actions
         Route::post('employer/tenders/{tender}/award', [\App\Http\Controllers\Employer\AttestationTenderController::class, 'award'])->name('employer.tenders.award');
         Route::post('employer/tenders/{tender}/complete', [\App\Http\Controllers\Employer\AttestationTenderController::class, 'complete'])->name('employer.tenders.complete');
