@@ -55,6 +55,20 @@ class ProtocolController extends Controller
 
     public function store(Request $request, AttestationApplication $application)
     {
+        $laboratoryId = auth()->user()->laboratory_id;
+        if (! $laboratoryId) {
+            abort(403);
+        }
+
+        // Re-verify ownership at write time (defence in depth — the create form
+        // already enforces it, but a hostile POST could bypass).
+        $hasTender = AttestationTender::where('laboratory_id', $laboratoryId)
+            ->where('organization_id', $application->organization_id)
+            ->exists();
+        if (! $hasTender) {
+            abort(403, 'Bu ariza sizning laboratoriyangizga tegishli emas.');
+        }
+
         $validated = $request->validate([
             // ── 18 SanQvaM 0069-24 omillari ──
             'chemical_factors' => 'nullable|array',

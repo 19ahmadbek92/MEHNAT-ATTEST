@@ -36,101 +36,104 @@
         </div>
 
         <nav class="nav-section">
-            <div class="nav-label">Asosiy</div>
+            <div class="nav-label">{{ __('messages.nav.main') }}</div>
             <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                <span class="nav-icon">▦</span> Boshqaruv paneli
+                <span class="nav-icon">▦</span> {{ __('messages.dashboard') }}
             </a>
 
             @php $role = Auth::user()->role; @endphp
 
-            @if($role === 'admin')
-                <div class="nav-label">Administrator</div>
+            @if ($role === 'admin')
+                <div class="nav-label">{{ __('messages.nav.admin') }}</div>
                 <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                    <span class="nav-icon">⚙</span> Admin paneli
+                    <span class="nav-icon">⚙</span> {{ __('messages.nav.admin_panel') }}
                 </a>
                 <a href="{{ route('admin.campaigns.index') }}" class="nav-item {{ request()->routeIs('admin.campaigns.*') ? 'active' : '' }}">
-                    <span class="nav-icon">▤</span> Kampaniyalar
+                    <span class="nav-icon">▤</span> {{ __('messages.nav.campaigns') }}
+                </a>
+                <a href="{{ route('admin.audit.index') }}" class="nav-item {{ request()->routeIs('admin.audit.*') ? 'active' : '' }}">
+                    <span class="nav-icon">◷</span> {{ __('messages.nav.audit_log') }}
                 </a>
             @endif
 
-            @if($role === 'employer')
-                <div class="nav-label">Ish beruvchi</div>
+            @if ($role === 'employer')
+                <div class="nav-label">{{ __('messages.nav.employer') }}</div>
                 <a href="{{ route('employer.organization.index') }}" class="nav-item {{ request()->routeIs('employer.organization.*') ? 'active' : '' }}">
-                    <span class="nav-icon">⌂</span> Korxona profili
+                    <span class="nav-icon">⌂</span> {{ __('messages.nav.organization') }}
                 </a>
                 <a href="{{ route('employer.workplaces.index') }}" class="nav-item {{ request()->routeIs('employer.workplaces.*') ? 'active' : '' }}">
-                    <span class="nav-icon">▥</span> Ish o‘rinlari
+                    <span class="nav-icon">▥</span> {{ __('messages.workplaces') }}
                 </a>
                 <a href="{{ route('employer.tenders.index') }}" class="nav-item {{ request()->routeIs('employer.tenders.*') ? 'active' : '' }}">
-                    <span class="nav-icon">⇆</span> Tenderlar
+                    <span class="nav-icon">⇆</span> {{ __('messages.nav.tenders') }}
                 </a>
                 <a href="{{ route('employee.applications.index') }}" class="nav-item {{ request()->routeIs('employee.applications.*') ? 'active' : '' }}">
-                    <span class="nav-icon">▤</span> Arizalar
+                    <span class="nav-icon">▤</span> {{ __('messages.nav.applications') }}
                 </a>
                 <a href="{{ route('employer.expertise.index') }}" class="nav-item {{ request()->routeIs('employer.expertise.*') ? 'active' : '' }}">
-                    <span class="nav-icon">◈</span> Davlat ekspertizasi
+                    <span class="nav-icon">◈</span> {{ __('messages.nav.state_expertise') }}
                 </a>
             @endif
 
-            @if($role === 'laboratory')
-                <div class="nav-label">Laboratoriya</div>
+            @if ($role === 'laboratory')
+                <div class="nav-label">{{ __('messages.nav.laboratory') }}</div>
                 <a href="{{ route('laboratory.profile.index') }}" class="nav-item {{ request()->routeIs('laboratory.profile.*') ? 'active' : '' }}">
-                    <span class="nav-icon">◉</span> Profilim
+                    <span class="nav-icon">◉</span> {{ __('messages.nav.my_profile') }}
                 </a>
                 <a href="{{ route('laboratory.protocols.index') }}" class="nav-item {{ request()->routeIs('laboratory.protocols.*') ? 'active' : '' }}">
-                    <span class="nav-icon">▤</span> O‘lchov protokollari
+                    <span class="nav-icon">▤</span> {{ __('messages.nav.protocols') }}
                 </a>
                 <a href="{{ route('laboratory.workplaces.index') }}" class="nav-item {{ request()->routeIs('laboratory.workplaces.*', 'laboratory.measurements.*') ? 'active' : '' }}">
-                    <span class="nav-icon">⌬</span> Ish o‘rinlari o‘lchovi
+                    <span class="nav-icon">⌬</span> {{ __('messages.nav.workplace_meas') }}
                 </a>
             @endif
 
-            @if($role === 'commission')
-                <div class="nav-label">Komissiya</div>
+            @if ($role === 'commission')
+                <div class="nav-label">{{ __('messages.nav.commission') }}</div>
                 <a href="{{ route('commission.evaluations.index') }}" class="nav-item {{ request()->routeIs('commission.evaluations.*') ? 'active' : '' }}">
-                    <span class="nav-icon">⌕</span> Tekshirish
+                    <span class="nav-icon">⌕</span> {{ __('messages.nav.review') }}
                     @php $pendingCount = \App\Models\AttestationApplication::where('status', 'hr_approved')->count(); @endphp
-                    @if($pendingCount > 0)<span class="nav-badge">{{ $pendingCount }}</span>@endif
+                    @if ($pendingCount > 0)<span class="nav-badge">{{ $pendingCount }}</span>@endif
                 </a>
             @endif
 
-            @if($role === 'hr')
-                <div class="nav-label">HR</div>
+            @if ($role === 'hr')
+                <div class="nav-label">{{ __('messages.nav.hr') }}</div>
                 <a href="{{ route('hr.applications.index') }}" class="nav-item {{ request()->routeIs('hr.applications.*') ? 'active' : '' }}">
-                    <span class="nav-icon">▤</span> Arizalarni ko‘rib chiqish
+                    <span class="nav-icon">▤</span> {{ __('messages.nav.review_apps') }}
                     @php $hrNew = \App\Models\AttestationApplication::where('status', 'submitted')->count(); @endphp
-                    @if($hrNew > 0)<span class="nav-badge">{{ $hrNew }}</span>@endif
+                    @if ($hrNew > 0)<span class="nav-badge">{{ $hrNew }}</span>@endif
                 </a>
             @endif
 
-            @if($role === 'institute_expert')
-                <div class="nav-label">Institut (Dastlabki)</div>
+            @if ($role === 'institute_expert')
+                <div class="nav-label">{{ __('messages.nav.institute') }}</div>
                 <a href="{{ route('institute.expertise.index') }}" class="nav-item {{ request()->routeIs('institute.expertise.*') ? 'active' : '' }}">
-                    <span class="nav-icon">⌬</span> Arizalar
-                    @php $instCount = \App\Models\StateExpertiseApplication::where('institute_status','pending')->count(); @endphp
-                    @if($instCount > 0)<span class="nav-badge">{{ $instCount }}</span>@endif
+                    <span class="nav-icon">⌬</span> {{ __('messages.nav.applications') }}
+                    @php $instCount = \App\Models\StateExpertiseApplication::where('institute_status', 'pending')->count(); @endphp
+                    @if ($instCount > 0)<span class="nav-badge">{{ $instCount }}</span>@endif
                 </a>
             @endif
 
-            @if($role === 'expert')
-                <div class="nav-label">Davlat ekspertizasi</div>
+            @if ($role === 'expert')
+                <div class="nav-label">{{ __('messages.nav.state_expertise') }}</div>
                 <a href="{{ route('ministry.expertise.index') }}" class="nav-item {{ request()->routeIs('ministry.expertise.*') ? 'active' : '' }}">
-                    <span class="nav-icon">⚖</span> Yakuniy xulosalar
-                    @php $minCount = \App\Models\StateExpertiseApplication::where('institute_status','approved')->where('ministry_status','pending')->count(); @endphp
-                    @if($minCount > 0)<span class="nav-badge">{{ $minCount }}</span>@endif
+                    <span class="nav-icon">⚖</span> {{ __('messages.nav.final_conclusions') }}
+                    @php $minCount = \App\Models\StateExpertiseApplication::where('institute_status', 'approved')->where('ministry_status', 'pending')->count(); @endphp
+                    @if ($minCount > 0)<span class="nav-badge">{{ $minCount }}</span>@endif
                 </a>
             @endif
 
-            @if(in_array($role, ['admin','expert'], true))
-                <div class="nav-label">Hisobot</div>
+            @if (in_array($role, ['admin', 'expert'], true))
+                <div class="nav-label">{{ __('messages.nav.report') }}</div>
                 <a href="{{ route('reports.index') }}" class="nav-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
-                    <span class="nav-icon">▦</span> Hisobotlar
+                    <span class="nav-icon">▦</span> {{ __('messages.reports') }}
                 </a>
             @endif
 
-            <div class="nav-label">Sozlamalar</div>
+            <div class="nav-label">{{ __('messages.nav.settings') }}</div>
             <a href="{{ route('profile.edit') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
-                <span class="nav-icon">◉</span> Profil
+                <span class="nav-icon">◉</span> {{ __('messages.profile') }}
             </a>
         </nav>
 
@@ -139,21 +142,13 @@
                 <div>
                     <div class="name">{{ Auth::user()->name }}</div>
                     <div class="role-tag">
-                        @switch($role)
-                            @case('admin')            Administrator @break
-                            @case('employer')         Ish beruvchi @break
-                            @case('commission')       Komissiya @break
-                            @case('expert')           Vazirlik eksperti @break
-                            @case('institute_expert') Institut eksperti @break
-                            @case('laboratory')       Laboratoriya @break
-                            @case('hr')               HR @break
-                            @default                  {{ $role }}
-                        @endswitch
+                        @php $roleKey = 'messages.roles.'.$role; @endphp
+                        {{ trans()->has($roleKey) ? __($roleKey) : ucfirst($role) }}
                     </div>
                 </div>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="sidebar-logout-btn">Chiqish</button>
+                    <button type="submit" class="sidebar-logout-btn">{{ __('messages.logout') }}</button>
                 </form>
             </div>
             <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.05);font-size:9.5px;color:rgba(255,255,255,.22);letter-spacing:.5px;">
@@ -167,7 +162,7 @@
         <div class="topbar">
             <div class="topbar-left">
                 <div class="topbar-title">
-                    @isset($header){{ $header }}@else Boshqaruv paneli @endisset
+                    @isset($header){{ $header }}@else {{ __('messages.dashboard') }} @endisset
                 </div>
             </div>
 
@@ -177,7 +172,7 @@
                     <span class="si">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
                     </span>
-                    <input type="search" placeholder="Qidiruv..." aria-label="Qidiruv" id="topbar-search-input" autocomplete="off" />
+                    <input type="search" placeholder="{{ __('messages.nav.search_placeholder') }}" aria-label="{{ __('messages.common.search') }}" id="topbar-search-input" autocomplete="off" />
                 </div>
 
                 {{-- language --}}
@@ -191,12 +186,47 @@
                     @endforeach
                 </div>
 
-                {{-- bell --}}
-                <button type="button" class="topbar-icon-btn" aria-label="Xabarnomalar" onclick="window.showNotif?.('Yangi xabarnomalar yo‘q','info')">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                    </svg>
-                </button>
+                {{-- bell + dropdown --}}
+                <div x-data="notifBell()" x-init="init()" style="position:relative;">
+                    <button type="button" class="topbar-icon-btn" aria-label="{{ __('messages.nav.notifications') }}" @click="toggle()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="dot" x-show="items.length > 0" x-cloak></span>
+                    </button>
+
+                    <div x-show="open" x-cloak @click.outside="open = false"
+                         x-transition:enter="transition ease-out duration-150"
+                         x-transition:enter-start="opacity-0"
+                         x-transition:enter-end="opacity-100"
+                         style="position:absolute;right:0;top:46px;width:340px;background:white;border:1px solid var(--border-soft);border-radius:var(--r-lg);box-shadow:var(--shadow-xl);overflow:hidden;z-index:200;">
+                        <div style="padding:14px 18px;border-bottom:1px solid var(--border-soft);display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#faf8f4,#fff);">
+                            <span style="font-weight:700;font-size:13px;color:var(--ink);">{{ __('messages.nav.notifications') }}</span>
+                            <span class="text-muted" style="font-size:11px;">{{ __('messages.nav.last_n') }}</span>
+                        </div>
+                        <div style="max-height:400px;overflow-y:auto;">
+                            <template x-if="loading">
+                                <div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">{{ __('messages.nav.loading') }}</div>
+                            </template>
+                            <template x-if="!loading && items.length === 0">
+                                <div style="padding:32px 24px;text-align:center;">
+                                    <div style="font-size:24px;color:var(--muted);margin-bottom:6px;">◌</div>
+                                    <div class="text-muted" style="font-size:13px;">{{ __('messages.nav.no_notifications') }}</div>
+                                </div>
+                            </template>
+                            <template x-for="n in items" :key="n.id">
+                                <div style="padding:12px 18px;border-bottom:1px solid var(--border-soft);display:flex;gap:12px;">
+                                    <div style="width:30px;height:30px;border-radius:9px;background:var(--teal-light);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">◷</div>
+                                    <div style="flex:1;min-width:0;">
+                                        <div style="font-size:13px;font-weight:600;color:var(--ink);" x-text="n.title"></div>
+                                        <div class="text-muted" style="font-size:11.5px;margin-top:2px;" x-text="n.subject || ''"></div>
+                                        <div class="text-muted" style="font-size:10.5px;margin-top:3px;letter-spacing:.4px;" x-text="n.when"></div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
 
                 {{-- user pill --}}
                 <a href="{{ route('profile.edit') }}" class="topbar-user-pill" aria-label="Profil">

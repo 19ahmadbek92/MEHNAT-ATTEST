@@ -27,11 +27,28 @@ class ApplicationReviewController extends Controller
 
         $applications = AttestationApplication::with(['user', 'campaign'])
             ->where('status', $status)
+            ->when($request->filled('q'), function ($query) use ($request) {
+                $term = '%'.$request->query('q').'%';
+                $query->where(function ($q) use ($term) {
+                    $q->where('workplace_name', 'like', $term)
+                        ->orWhere('position', 'like', $term)
+                        ->orWhere('department', 'like', $term)
+                        ->orWhereHas('user', fn ($u) => $u->where('name', 'like', $term));
+                });
+            })
             ->latest()
             ->paginate(10)
             ->withQueryString();
 
-        return view('hr.applications.index', compact('applications', 'status'));
+        // Single grouped query — avoids three separate COUNT(*)s in the view.
+        $counts = AttestationApplication::query()
+            ->selectRaw('status, COUNT(*) as total')
+            ->whereIn('status', $allowed)
+            ->groupBy('status')
+            ->pluck('total', 'status')
+            ->toArray();
+
+        return view('hr.applications.index', compact('applications', 'status', 'counts'));
     }
 
     public function show(AttestationApplication $application)

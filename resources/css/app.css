@@ -787,5 +787,289 @@ body {
     color: var(--muted);
 }
 
+/* alpine cloak — hides x-cloak elements before Alpine boots */
+[x-cloak] { display: none !important; }
+
 /* link reset for inline anchors inside cards */
 .att-card a, .stat-card a, .action-card a { text-decoration: none; }
+
+/* ═══════════════════════════════════════════════════════════════
+   KEY-VALUE LISTS / DETAIL ROWS
+═══════════════════════════════════════════════════════════════ */
+.kv-list { width: 100%; border-collapse: collapse; }
+.kv-list .kv-row td {
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border-soft);
+    vertical-align: middle;
+    font-size: 13.5px;
+}
+.kv-list .kv-row:last-child td { border-bottom: none; }
+.kv-list .kv-key {
+    color: var(--muted);
+    font-size: 12px;
+    width: 38%;
+    white-space: nowrap;
+    padding-right: 18px;
+}
+.kv-list .kv-val { font-weight: 600; color: var(--ink); }
+
+/* compact info row - "label: value" pair */
+.info-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 13px;
+    gap: 14px;
+}
+.info-row:last-child { border-bottom: none; }
+.info-row .info-label { color: var(--muted); flex-shrink: 0; }
+.info-row .info-value { font-weight: 600; color: var(--ink); text-align: right; word-break: break-word; }
+
+/* card with side accent stripe */
+.att-card-accent-teal  { border-left: 3px solid var(--teal); }
+.att-card-accent-gold  { border-left: 3px solid var(--gold-bright); }
+.att-card-accent-green { border-left: 3px solid var(--green-bright); }
+.att-card-accent-red   { border-left: 3px solid var(--red); }
+.att-card-accent-blue  { border-left: 3px solid var(--blue); }
+
+/* small metric box (used on detail pages, e.g. measurement values) */
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+.metric-box {
+    text-align: center;
+    background: #faf8f4;
+    border: 1px solid var(--border-soft);
+    padding: 14px 12px;
+    border-radius: var(--r);
+}
+.metric-box .ml {
+    font-size: 10.5px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px;
+}
+.metric-box .mv {
+    font-family: var(--font-display);
+    font-size: 22px; color: var(--ink); line-height: 1;
+}
+.metric-box .mu { font-size: 11px; color: var(--muted); margin-left: 3px; }
+
+/* sub-section header */
+.section-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 22px 0 16px;
+}
+.section-divider .pip {
+    width: 4px; height: 28px; border-radius: 4px;
+    background: var(--teal);
+}
+.section-divider.gold  .pip { background: var(--gold-bright); }
+.section-divider.green .pip { background: var(--green-bright); }
+.section-divider.red   .pip { background: var(--red); }
+.section-divider .label {
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--ink);
+    margin: 0;
+    letter-spacing: -.2px;
+}
+
+/* form fieldset card layout */
+.form-section {
+    background: var(--white);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-lg);
+    padding: 22px 24px;
+    margin-bottom: 18px;
+}
+.form-section + .form-section { margin-top: 14px; }
+
+/* document file pill */
+.file-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    border-radius: var(--r);
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 13px; font-weight: 600;
+    text-decoration: none;
+    transition: background .18s, color .18s;
+}
+.file-pill:hover { background: var(--teal-light); color: var(--teal); text-decoration: none; }
+
+/* QR/conclusion stamp (used by ministry expertise) */
+.conclusion-stamp {
+    margin-top: 18px;
+    padding: 16px;
+    background: var(--green-light);
+    border: 1px solid rgba(23,107,58,.22);
+    border-radius: var(--r);
+    text-align: center;
+}
+.conclusion-stamp .cs-label {
+    font-size: 11px; color: var(--green);
+    text-transform: uppercase; font-weight: 700; letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+.conclusion-stamp .cs-number {
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    font-size: 18px; font-weight: 700; color: var(--green);
+    word-break: break-all;
+}
+.conclusion-stamp .cs-hint { font-size: 11px; color: var(--muted); margin-top: 8px; }
+
+/* page-level wrapper that limits width on large screens */
+.page-narrow { max-width: 1080px; }
+.page-readable { max-width: 880px; }
+
+/* ─── PAGINATION (used by Paginator::defaultView) ──────────────── */
+.att-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+    padding: 12px 4px;
+}
+.att-pagination__summary {
+    font-size: 12.5px;
+    color: var(--muted);
+    font-weight: 500;
+}
+.att-pagination__list {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.att-pagination__item .att-pagination__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .15s, border-color .15s, color .15s;
+}
+.att-pagination__item .att-pagination__link:hover {
+    background: var(--teal-light);
+    border-color: var(--teal);
+    color: var(--teal);
+}
+.att-pagination__item.is-active .att-pagination__link {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: var(--white);
+    box-shadow: 0 2px 8px var(--teal-glow);
+}
+.att-pagination__item.is-disabled .att-pagination__link {
+    color: #c7c4bb;
+    background: #faf8f4;
+    cursor: not-allowed;
+}
+
+/* ─── SEARCH/FILTER BAR ────────────────────────────────────────── */
+.att-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    background: var(--white);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-lg);
+}
+.att-toolbar > form {
+    display: contents;
+}
+.att-toolbar .att-search {
+    flex: 1 1 240px;
+    position: relative;
+}
+.att-toolbar .att-search input {
+    width: 100%;
+    padding: 9px 12px 9px 38px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--white);
+    font-size: 13.5px;
+    color: var(--ink);
+    transition: border-color .15s, box-shadow .15s;
+}
+.att-toolbar .att-search input:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px var(--teal-glow);
+}
+.att-toolbar .att-search::before {
+    content: "🔍";
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    opacity: .6;
+    pointer-events: none;
+}
+.att-toolbar select {
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--white);
+    font-size: 13.5px;
+    color: var(--ink);
+    min-width: 140px;
+}
+
+/* ─── FILTER TAB CHIP ROW ──────────────────────────────────────── */
+.filter-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+.filter-tabs .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--ink);
+    font-size: 12.5px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .15s, color .15s, border-color .15s;
+}
+.filter-tabs .chip:hover {
+    background: var(--teal-light);
+    color: var(--teal);
+    border-color: var(--teal);
+}
+.filter-tabs .chip.is-active {
+    background: var(--teal);
+    color: var(--white);
+    border-color: var(--teal);
+    box-shadow: 0 2px 8px var(--teal-glow);
+}
+.filter-tabs .chip .count {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    background: rgba(0,0,0,.08);
+}
+.filter-tabs .chip.is-active .count { background: rgba(255,255,255,.22); }
+

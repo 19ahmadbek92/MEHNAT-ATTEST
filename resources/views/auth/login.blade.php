@@ -76,8 +76,8 @@
     </div>
 
     <div style="text-align: center; margin-top: 20px;">
-        <a href="{{ route('auth.select-type') }}" class="g-link">
-            ← Kirish turi sahifasiga qaytish
+        <a href="{{ route('home') }}#paneller" class="g-link">
+            ← Kabinet tanlashga qaytish
         </a>
     </div>
 

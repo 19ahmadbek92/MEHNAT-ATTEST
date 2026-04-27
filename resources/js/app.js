@@ -13,8 +13,53 @@ Chart.defaults.font.size = 12;
 Chart.defaults.color = '#78756e';
 Chart.defaults.borderColor = '#eae7e0';
 
-// Alpine
+// Alpine - register components BEFORE Alpine.start()
 window.Alpine = Alpine;
+
+/**
+ * Notification bell dropdown.
+ * Polls /notifications/recent and surfaces the latest 8 audit-log entries
+ * relevant to the current user.
+ */
+window.notifBell = function () {
+    return {
+        open: false,
+        loading: false,
+        items: [],
+        loadedAt: 0,
+
+        init() {
+            // Initial fetch shortly after mount so the bell dot reflects state.
+            setTimeout(() => this.fetchItems(), 800);
+            // Re-fetch every 90s while the page is open.
+            this._timer = setInterval(() => this.fetchItems(), 90_000);
+        },
+
+        async fetchItems() {
+            this.loading = true;
+            try {
+                const r = await fetch('/notifications/recent', {
+                    headers: { 'Accept': 'application/json' },
+                    credentials: 'same-origin',
+                });
+                if (r.ok) {
+                    const data = await r.json();
+                    this.items = data.items || [];
+                    this.loadedAt = Date.now();
+                }
+            } catch (_) { /* network errors are silent */ }
+            this.loading = false;
+        },
+
+        toggle() {
+            this.open = !this.open;
+            if (this.open && Date.now() - this.loadedAt > 30_000) {
+                this.fetchItems();
+            }
+        },
+    };
+};
+
 Alpine.start();
 
 /**

@@ -5,7 +5,6 @@ use App\Http\Controllers\Admin\AttestationCampaignController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Auth\EriController;
 use App\Http\Controllers\Auth\OneIDController;
-use App\Http\Controllers\Auth\SelectTypeController;
 use App\Http\Controllers\Commission\EvaluationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Employee\AiProcessController;
@@ -72,7 +71,14 @@ Route::middleware(['auth'])->group(function () {
 
         Route::resource('admin/campaigns', AttestationCampaignController::class)
             ->names('admin.campaigns');
+
+        Route::get('/admin/audit-log', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])
+            ->name('admin.audit.index');
     });
+
+    // Notifications feed (all authenticated roles)
+    Route::get('/notifications/recent', [\App\Http\Controllers\NotificationController::class, 'recent'])
+        ->name('notifications.recent');
     // Davlat ekspertizasi routes (Vazirlik xulosasi)
     Route::middleware(['role:expert'])->group(function () {
         Route::get('ministry/expertise', [\App\Http\Controllers\Ministry\ExpertiseController::class, 'index'])->name('ministry.expertise.index');
@@ -171,8 +177,11 @@ Route::middleware(['auth'])->group(function () {
         ->name('profile.destroy');
 });
 
-// Kirish turini tanlash sahifasi
-Route::get('/login/select-type', SelectTypeController::class)->name('auth.select-type');
+// Eski "kirish turini tanlash" sahifasi olib tashlandi — endi har panel
+// alohida login URL'iga ega. Yo'naltirish faqat eski havolalar buzilmasligi
+// uchun saqlab qo'yiladi.
+Route::get('/login/select-type', fn () => redirect(url('/').'#paneller'))
+    ->name('auth.select-type');
 
 Route::middleware(['guest', 'throttle:demo-auth', 'sso'])->group(function () {
     Route::get('/auth/oneid', [OneIDController::class, 'redirect'])

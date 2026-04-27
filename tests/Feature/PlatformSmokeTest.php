@@ -16,14 +16,18 @@ class PlatformSmokeTest extends TestCase
         $this->get('/dashboard')->assertRedirect();
     }
 
-    public function test_home_and_select_type_render(): void
+    public function test_home_and_role_logins_render(): void
     {
         $this->get('/')
             ->assertOk()
             ->assertHeader('X-Frame-Options', 'DENY')
             ->assertHeader('X-Content-Type-Options', 'nosniff');
 
-        $this->get(route('auth.select-type'))->assertOk();
+        // Each panel has its own dedicated login door now.
+        foreach (['employer', 'admin', 'hr', 'commission', 'laboratory', 'institute_expert', 'expert'] as $role) {
+            $this->get("/login/{$role}")->assertOk();
+        }
+
         $this->get(route('healthz'))
             ->assertOk()
             ->assertJsonStructure(['status', 'checks' => ['database', 'cache', 'storage']]);
@@ -40,8 +44,9 @@ class PlatformSmokeTest extends TestCase
             'home',
             'dashboard',
             'healthz',
-            'auth.select-type',
             'login',
+            'login.role',
+            'login.role.store',
             'admin.dashboard',
             'hr.applications.index',
             'employee.applications.index',
@@ -59,6 +64,17 @@ class PlatformSmokeTest extends TestCase
 
         $this->actingAs($admin)->get('/dashboard')->assertOk();
         $this->actingAs($admin)->get('/admin')->assertOk();
+        $this->actingAs($admin)->get(route('admin.audit.index'))->assertOk();
+    }
+
+    public function test_authenticated_user_can_fetch_recent_notifications(): void
+    {
+        $user = User::factory()->create(['role' => 'employer']);
+
+        $this->actingAs($user)
+            ->get(route('notifications.recent'))
+            ->assertOk()
+            ->assertJsonStructure(['items']);
     }
 
     public function test_hr_can_open_applications_index(): void

@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\RoleLoginController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,16 +15,27 @@ Route::middleware('guest')->group(function () {
     // Ro'yhatdan o'tish faqat OneID/ERI orqali
     Route::view('register', 'auth.register-external')->name('register');
 
-    // Asosiy login URL ni kabinet tanlash sahifasiga yo'naltiramiz
+    // /login asosiy URL: foydalanuvchini panel tanlashga yo'naltiramiz
+    // (har panel uchun alohida login sahifasi mavjud).
     Route::get('login', function () {
-        return redirect()->route('auth.select-type');
+        return redirect()->route('home');
     })->name('login');
 
-    // Tashkilot / ish beruvchilar uchun email-parol login
+    // Eski email-parol login (legacy fallback) — bo'lajak migratsiyalar uchun
+    // saqlab qo'yamiz, ammo asosiy oqim role-scoped login bo'ladi.
     Route::get('login/email', [AuthenticatedSessionController::class, 'create'])
         ->name('login.email');
-
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+    // Role-scoped login (har panel alohida eshik):
+    // GET/POST /login/{role}; faqat ro'yxatga olingan rollar uchun.
+    $roles = implode('|', array_keys(RoleLoginController::PANELS));
+    Route::get('login/{role}', [RoleLoginController::class, 'show'])
+        ->where('role', $roles)
+        ->name('login.role');
+    Route::post('login/{role}', [RoleLoginController::class, 'store'])
+        ->where('role', $roles)
+        ->name('login.role.store');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');

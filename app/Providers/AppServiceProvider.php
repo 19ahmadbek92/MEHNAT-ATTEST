@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -37,5 +38,10 @@ class AppServiceProvider extends ServiceProvider
         if (str_starts_with((string) config('app.url'), 'https://')) {
             URL::forceScheme('https');
         }
+
+        // Use the project's themed paginator everywhere by default — keeps every
+        // ->links() output aligned with the design system without per-view tweaks.
+        Paginator::defaultView('vendor.pagination.att');
+        Paginator::defaultSimpleView('vendor.pagination.att');
     }
 }
