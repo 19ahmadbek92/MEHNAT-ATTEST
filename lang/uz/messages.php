@@ -27,6 +27,7 @@ return [
         'my_profile' => 'Profilim',
         'protocols' => 'O\'lchov protokollari',
         'workplace_meas' => 'Ish o\'rinlari o\'lchovi',
+        'ergonomic' => 'Ergonomik baholash',
         'commission' => 'Komissiya',
         'review' => 'Tekshirish',
         'hr' => 'HR',

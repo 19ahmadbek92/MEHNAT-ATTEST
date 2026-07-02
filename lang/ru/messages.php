@@ -26,6 +26,7 @@ return [
         'my_profile' => 'Мой профиль',
         'protocols' => 'Протоколы измерений',
         'workplace_meas' => 'Замеры на рабочих местах',
+        'ergonomic' => 'Эргономическая оценка',
         'commission' => 'Комиссия',
         'review' => 'Проверка',
         'hr' => 'HR',

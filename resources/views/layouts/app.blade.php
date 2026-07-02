@@ -86,6 +86,9 @@
                 <a href="{{ route('laboratory.workplaces.index') }}" class="nav-item {{ request()->routeIs('laboratory.workplaces.*', 'laboratory.measurements.*') ? 'active' : '' }}">
                     <span class="nav-icon">⌬</span> {{ __('messages.nav.workplace_meas') }}
                 </a>
+                <a href="{{ route('laboratory.workplaces.index') }}" class="nav-item {{ request()->routeIs('laboratory.ergonomic.*') ? 'active' : '' }}">
+                    <span class="nav-icon">☍</span> {{ __('messages.nav.ergonomic') }}
+                </a>
             @endif
 
             @if ($role === 'commission')

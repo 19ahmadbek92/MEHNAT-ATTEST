@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ergonomik Baholash</string>
+    <string name="report_title">Baholash natijasi</string>
+    <string name="history_title">Tarix</string>
+
+    <string name="subtitle">Yarim tayyor mahsulot va xomashyoni solish-ortish (yuklash-tushirish) ishchilarining mehnat xavfsizligini inson omili va ergonomik yuklanish asosida baholash (alyuminiy profil sanoati misolida).</string>
+    <string name="methodology_note">Metodika: NIOSH (1994) ko\'tarish tenglamasi, R2.2.2006-05 / SanQvaM 0069-24 uslubidagi og\'irlik va zo\'riqish darajalari, hamda inson omili xavfi bali.</string>
+
+    <string name="fill_example">Namuna bilan to\'ldirish (Alyuminiy profil bog\'lami)</string>
+    <string name="clear_form">Tozalash</string>
+    <string name="calculate">Hisoblash va saqlash</string>
+    <string name="view_history">Tarixni ko\'rish</string>
+
+    <string name="error_required_fields">Yuk massasi va NIOSH parametrlari (H, V, D) to\'liq kiritilishi shart.</string>
+    <string name="saved_success">Ergonomik baholash muvaffaqiyatli yakunlandi.</string>
+
+    <string name="result_lifting_index">Ko\'tarish indeksi (NIOSH LI)</string>
+    <string name="result_rwl">RWL (tavsiya etilgan chegara)</string>
+    <string name="result_severity_class">Og\'irlik darajasi klassi</string>
+    <string name="result_strain_class">Zo\'riqish klassi</string>
+    <string name="result_human_factor">Inson omili xavfi</string>
+    <string name="result_recommendations">Tavsiyalar</string>
+
+    <string name="history_empty">Hali baholash saqlanmagan</string>
+</resources>

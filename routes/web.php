@@ -134,6 +134,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('laboratory/workplaces', [\App\Http\Controllers\Laboratory\MeasurementController::class, 'index'])->name('laboratory.workplaces.index');
         Route::get('laboratory/workplaces/{workplace}/measure', [\App\Http\Controllers\Laboratory\MeasurementController::class, 'create'])->name('laboratory.measurements.create');
         Route::post('laboratory/workplaces/{workplace}/measure', [\App\Http\Controllers\Laboratory\MeasurementController::class, 'store'])->name('laboratory.measurements.store');
+
+        // Yuklash-tushirish (solish-ortish) ishchilari uchun ergonomik/inson omili baholash
+        Route::get('laboratory/workplaces/{workplace}/ergonomic', [\App\Http\Controllers\Laboratory\ErgonomicAssessmentController::class, 'index'])->name('laboratory.ergonomic.index');
+        Route::get('laboratory/workplaces/{workplace}/ergonomic/create', [\App\Http\Controllers\Laboratory\ErgonomicAssessmentController::class, 'create'])->name('laboratory.ergonomic.create');
+        Route::post('laboratory/workplaces/{workplace}/ergonomic', [\App\Http\Controllers\Laboratory\ErgonomicAssessmentController::class, 'store'])->name('laboratory.ergonomic.store');
+        Route::get('laboratory/workplaces/{workplace}/ergonomic/{ergonomic}', [\App\Http\Controllers\Laboratory\ErgonomicAssessmentController::class, 'show'])->name('laboratory.ergonomic.show');
     });
 
     // Commission routes

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="teal_primary">#0D6E6E</color>
+    <color name="teal_dark">#0A5050</color>
+    <color name="ink">#0E1117</color>
+    <color name="paper">#F4F2EE</color>
+    <color name="green_ok">#176B3A</color>
+    <color name="gold_warn">#B8841E</color>
+    <color name="red_danger">#B83232</color>
+    <color name="white">#FFFFFF</color>
+</resources>

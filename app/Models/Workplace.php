@@ -36,6 +36,11 @@ class Workplace extends Model
         return $this->hasMany(MeasurementResult::class);
     }
 
+    public function ergonomicAssessments()
+    {
+        return $this->hasMany(ErgonomicAssessment::class);
+    }
+
     public function isPending()
     {
         return $this->status === 'pending';

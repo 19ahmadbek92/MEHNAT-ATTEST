@@ -22,4 +22,9 @@ class Employee extends Model
     {
         return $this->belongsTo(Workplace::class);
     }
+
+    public function ergonomicAssessments()
+    {
+        return $this->hasMany(ErgonomicAssessment::class);
+    }
 }
