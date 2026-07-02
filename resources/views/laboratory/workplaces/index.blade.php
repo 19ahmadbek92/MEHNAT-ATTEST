@@ -37,11 +37,14 @@
                             <td style="color:#555;">{{ $wp->department ?? '—' }}</td>
                             <td><x-att-badge :status="$wp->status" /></td>
                             <td style="text-align:center;">
-                                @if ($wp->status === 'pending')
-                                    <x-att-button :href="route('laboratory.measurements.create', $wp)" variant="primary" size="sm">O‘lchov kiritish</x-att-button>
-                                @else
-                                    <span style="color:var(--muted);font-size:12px;font-style:italic;">Yakunlangan</span>
-                                @endif
+                                <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
+                                    @if ($wp->status === 'pending')
+                                        <x-att-button :href="route('laboratory.measurements.create', $wp)" variant="primary" size="sm">O‘lchov kiritish</x-att-button>
+                                    @else
+                                        <span style="color:var(--muted);font-size:12px;font-style:italic;align-self:center;">Yakunlangan</span>
+                                    @endif
+                                    <x-att-button :href="route('laboratory.ergonomic.index', $wp)" variant="secondary" size="sm">Ergonomik baholash</x-att-button>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
@@ -61,11 +64,12 @@
                         </div>
                         <x-att-badge :status="$wp->status" />
                     </div>
-                    @if ($wp->status === 'pending')
-                        <div style="margin-top:10px;">
+                    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+                        @if ($wp->status === 'pending')
                             <x-att-button :href="route('laboratory.measurements.create', $wp)" variant="primary" size="sm" class="w-full">O‘lchov kiritish</x-att-button>
-                        </div>
-                    @endif
+                        @endif
+                        <x-att-button :href="route('laboratory.ergonomic.index', $wp)" variant="secondary" size="sm" class="w-full">Ergonomik baholash</x-att-button>
+                    </div>
                 </div>
             @endforeach
         </div>

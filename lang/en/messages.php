@@ -26,6 +26,7 @@ return [
         'my_profile' => 'My profile',
         'protocols' => 'Measurement protocols',
         'workplace_meas' => 'Workplace measurements',
+        'ergonomic' => 'Ergonomic assessment',
         'commission' => 'Commission',
         'review' => 'Review',
         'hr' => 'HR',
